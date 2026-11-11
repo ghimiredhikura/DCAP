@@ -3,17 +3,20 @@
     {
       "asset": "chips_2017.zip",
       "bytes": 1120940303,
-      "sha256": "174110df28c63165d92424773ca7740a4771e61d8f60d84d01a26c693a04c6c0"
+      "sha256": "174110df28c63165d92424773ca7740a4771e61d8f60d84d01a26c693a04c6c0",
+      "release": "v1.1.0"
     },
     {
       "asset": "chips_2018.zip",
       "bytes": 1216720451,
-      "sha256": "8d25adf4345f8bfd5b109a00b8287126c72a375ba26b58a5744ee21f8b535a5e"
+      "sha256": "8d25adf4345f8bfd5b109a00b8287126c72a375ba26b58a5744ee21f8b535a5e",
+      "release": "v1.1.0"
     },
     {
       "asset": "chips_2019.zip",
       "bytes": 1349669162,
-      "sha256": "7e969520a46dc7dac7eff799f6b4f5d55cff8cc3b6e7638e650137e133a3964b"
+      "sha256": "7e969520a46dc7dac7eff799f6b4f5d55cff8cc3b6e7638e650137e133a3964b",
+      "release": "v1.1.0"
     }
   ],
   "files": {

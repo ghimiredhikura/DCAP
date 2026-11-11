@@ -1,0 +1,25 @@
+COMPARATOR MODEL NOTICES
+
+These tensor-only checkpoints are the study models trained by the DCAP authors.
+SIRFP25 and SIRFP70 contain ResUNet weights and are distributed under the MIT
+license in the repository. They contain no upstream SIRFP source code.
+
+SegFormer-B2 checkpoints derive from NVIDIA MiT-B2 pretrained weights and the
+SegFormer architecture. Their use and redistribution are subject to the NVIDIA
+Source Code License in SegFormer-LICENSE.txt, including its noncommercial
+research/evaluation restriction. They are not covered by the repository's MIT
+license. Preserve this notice and that license with any redistribution.
+
+SegFormer source: https://github.com/NVlabs/SegFormer
+Source commit: 65fa8cfa9b52b6ee7e8897a98705abf8570f9e32
+Pretraining: https://huggingface.co/nvidia/mit-b2
+Pretraining revision: 3bb39e8739149c3777d0325349b2a6c32c6413db
+
+SIRFP source: https://github.com/dywu98/SIRFP
+Source commit: 367176e45e5001e7ae1983ac9587b873ceda1e11
+No explicit license was found for that source at the pinned commit. It is not
+redistributed here; obtain it separately for the scoring dependency. Its use
+and redistribution remain subject to the upstream authors' rights.
+
+For asset hashes, ensemble membership and inference settings, see
+metadata/models.json and docs/comparators.md in the repository.

@@ -7,16 +7,18 @@ Checked on Ubuntu with one RTX 5090 selected for GPU inference. Exact package ve
 | Check | Outcome |
 |---|---|
 | Data installation and SHA-256 verification | All three archives and 2,640 rasters passed; 1,320 chips with 990/132/198 partitions |
-| Model installation | All six tensor-only checkpoints passed catalog checks |
+| Model installation | Fifteen tensor-only checkpoints with per-release hashes and retained notices |
 | Compact statistical replay | All main endpoint values, DCAP paired intervals and all 72 sensitivity rows match the frozen evidence |
-| Released-weight validation/test inference | Dense and DCAP AP, Dice, small-component recall and boundary F1 match exactly; absolute Brier differences <2×10⁻⁹ |
+| Released-weight validation/test inference | All five ensembles: AP, Dice, small-component recall and boundary F1 match exactly; absolute Brier differences <2×10⁻⁹ |
+| Comparator reconstruction | SIRFP25 seed-42 pruning reproduces original initial tensors exactly; pinned upstream scorer agrees on signed, positive and zero fixtures |
+| Comparator training | SIRFP recovery and SegFormer training pass two-epoch checks; all 332 converted ImageNet backbone tensors match the recorded initialization |
 | Fresh-checkpoint threshold path | Re-fitting DCAP validation thresholds matches the stored global and block thresholds; test consumes that validation result |
 | Inventory-to-mask reconstruction | All 1,320 masks match pixel for pixel, including georeferencing |
 | Live source preparation | One chip downloaded from public Sentinel-2/DEM assets; mask matches exactly; image maximum absolute difference 7.63×10⁻⁶ |
 | Dense training and resume | Two-epoch checks on eight fitting/four validation chips matched with and without interruption; restart before the first saved epoch also passed |
 | DCAP construction and recovery | Full 18-epoch gate learning, physical removal, training-only inheritance/BN selection and one recovery epoch completed; measured MAC reduction 70.0003% |
 | Ubuntu inference benchmark | All 12 model/mode/batch combinations passed CPU parity and changed-input checks; full timing protocol passed initially; all 12 functional configurations passed after cleanup |
-| Automated regression suite | Twelve checks passed in both the CUDA host environment and a fresh isolated CPU environment, including scientific replay, split/threshold provenance, checkpoint/statistics integrity and package exclusions |
+| Automated regression suite | Eighteen checks passed in the CUDA host environment; optional comparator dependencies are isolated from the base CPU workflow, including scientific replay, split/threshold provenance, checkpoint/statistics integrity and package exclusions |
 | Figures | Figures 6–8 and 10 regenerated as PDF/PNG; rendering inspected |
 | Target-device evidence | Table 13/Figure 10 replay from 44 recorded job summaries; original suite passed 104 jobs and 1,608 prediction checks |
 | Fresh environment | Python 3.13 venv without system site packages; official CPU PyTorch 2.13.0, pinned dependencies and editable checkout installed; `pip check`, replay and plots passed |

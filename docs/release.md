@@ -1,15 +1,16 @@
 # Release assets and packaging
 
-[Repository](https://github.com/ghimiredhikura/DCAP) · [v1.1.0 prerelease](https://github.com/ghimiredhikura/DCAP/releases/tag/v1.1.0)
+[Repository](https://github.com/ghimiredhikura/DCAP) · [v1.2.0 prerelease](https://github.com/ghimiredhikura/DCAP/releases/tag/v1.2.0)
 
-The `main` branch includes verified RTX 4080/Jetson AGX Orin results and Figure 10 replay. The v1.1.0 tag and its source archive predate this update; its data and checkpoint assets remain valid and unchanged. Clone `main` for the current documentation and deployment evidence. No software DOI is assigned.
+Version 1.2.0 includes the SIRFP/SegFormer adaptations, nine additional checkpoints and the verified RTX 4080/Jetson AGX Orin evidence. Unchanged dense/DCAP and data assets remain at v1.1.0; the download helper resolves each catalogued asset to its pinned release. No software DOI is assigned.
 
 ## Where files live
 
 | Location | Contents |
 |---|---|
 | Git repository | Code, configuration, metadata, selected results, example fixture, notices and guides |
-| Model assets | Six `.pt` checkpoints and `MODEL_NOTICES.txt` |
+| Main model assets (v1.1.0) | Six dense/DCAP `.pt` checkpoints and `MODEL_NOTICES.txt` |
+| Comparator assets (v1.2.0) | Nine SIRFP/SegFormer `.pt` checkpoints, `COMPARATOR_MODEL_NOTICES.txt` and `SegFormer-LICENSE.txt` |
 | Data assets | Three year-specific ZIPs, `DATA_CATALOG.json`, `DATA_NOTICES.txt` and DEM license |
 | Source asset | Portable ZIP extracting to `dcap/`; matches the tagged checkout without Git metadata |
 | Checksums | `SHA256SUMS` for all attached files; separate source-ZIP checksum |
@@ -49,6 +50,7 @@ Documentation updates on `main` may follow a release; an existing tag and its ar
 - **MIT:** author code and the selected author-trained ResUNet checkpoints.
 - **Source terms:** dataset derivatives, including the example fixture; see [data notices](../data/DATA_NOTICES.txt).
 - **Dependencies:** installed from upstream distributions under their own licenses; main pruning baselines use Torch-Pruning.
-- **Not bundled:** ImageNet pretrained parameters, SegFormer weights, vendor code, administrative boundaries or unrelated results.
+- **SegFormer:** derived code and trained weights retain the [NVIDIA Source Code License](../licenses/SegFormer-LICENSE.txt), including noncommercial research/evaluation restrictions.
+- **Not bundled:** SIRFP upstream source, initial ImageNet parameters, administrative boundaries or unrelated results. The comparator guide explains the pinned source/pretraining downloads.
 
 See the [repository overview](../README.md#repository-guide) for the source-folder map.

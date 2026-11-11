@@ -1,0 +1,74 @@
+{
+  "sirfp25_validation": {
+    "chips": 132,
+    "blocks": 49,
+    "global_validation_threshold": 0.677,
+    "outcomes": {
+      "average_precision": 0.49815963105885336,
+      "dice": 0.5117563515859239,
+      "small_object_recall": 0.325,
+      "boundary_f1": 0.541778579529631,
+      "balanced_brier_score": 0.1890117478224879
+    }
+  },
+  "sirfp25_test": {
+    "chips": 198,
+    "blocks": 49,
+    "global_validation_threshold": 0.677,
+    "outcomes": {
+      "average_precision": 0.43449446605705466,
+      "dice": 0.4788423512493259,
+      "small_object_recall": 0.3684210526315789,
+      "boundary_f1": 0.5407969474187581,
+      "balanced_brier_score": 0.22409737651641534
+    }
+  },
+  "sirfp70_validation": {
+    "chips": 132,
+    "blocks": 49,
+    "global_validation_threshold": 0.739,
+    "outcomes": {
+      "average_precision": 0.45136913833154685,
+      "dice": 0.49885927476715786,
+      "small_object_recall": 0.35,
+      "boundary_f1": 0.5230493664932383,
+      "balanced_brier_score": 0.19321352636785402
+    }
+  },
+  "sirfp70_test": {
+    "chips": 198,
+    "blocks": 49,
+    "global_validation_threshold": 0.739,
+    "outcomes": {
+      "average_precision": 0.3642927455990481,
+      "dice": 0.4065269707108059,
+      "small_object_recall": 0.2631578947368421,
+      "boundary_f1": 0.45644430731555735,
+      "balanced_brier_score": 0.25941830475490685
+    }
+  },
+  "segformer_b2_validation": {
+    "chips": 132,
+    "blocks": 49,
+    "global_validation_threshold": 0.691,
+    "outcomes": {
+      "average_precision": 0.5103973576549744,
+      "dice": 0.5585489613411455,
+      "small_object_recall": 0.4,
+      "boundary_f1": 0.6134271054160088,
+      "balanced_brier_score": 0.18476017727096816
+    }
+  },
+  "segformer_b2_test": {
+    "chips": 198,
+    "blocks": 49,
+    "global_validation_threshold": 0.691,
+    "outcomes": {
+      "average_precision": 0.4174861381161396,
+      "dice": 0.44979397093905876,
+      "small_object_recall": 0.2894736842105263,
+      "boundary_f1": 0.5208415769415298,
+      "balanced_brier_score": 0.22530505371489848
+    }
+  }
+}

@@ -1,3 +1,8 @@
+Scope: this license covers the DCAP authors' code and ResUNet checkpoints.
+SegFormer-derived components and weights have separate terms in
+licenses/SegFormer-LICENSE.txt; see licenses/COMPARATOR_MODEL_NOTICES.txt.
+Dataset terms are stated in data/DATA_NOTICES.txt.
+
 MIT License
 
 Copyright (c) 2026 Deepak Ghimire

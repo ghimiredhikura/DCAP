@@ -119,7 +119,16 @@ def parent_for_seed(seed, directory=None):
 
 
 def construct_pruned(
-    method, target, seed, cache, train, norm, models=None, job=None, design=None
+    method,
+    target,
+    seed,
+    cache,
+    train,
+    norm,
+    models=None,
+    job=None,
+    design=None,
+    output=None,
 ):
     from dataclasses import asdict
 
@@ -135,6 +144,17 @@ def construct_pruned(
         else parent_for_seed(seed, models)
     )
     teacher.eval()
+    if method == "sirfp":
+        from .sirfp import construct
+
+        model, measurement = construct(
+            teacher, target, cache, train, norm, job, design, Path(output)
+        )
+        return (
+            model,
+            teacher if any(job["recovery_weights"].values()) else None,
+            measurement,
+        )
     model = copy.deepcopy(teacher)
     if design is None:
         raise ValueError("Pruning requires fitting-only calibration IDs in the design")
@@ -270,11 +290,11 @@ def train_one(
         raise ValueError("Epoch count must be positive")
     if (
         smoke
-        and job["method"] in ("dcap", "taylor")
+        and job["method"] in ("dcap", "taylor", "sirfp")
         and not job.get("initial_checkpoint")
     ):
         raise ValueError(
-            "DCAP/Taylor calibration requires the full fitting set; use --plan or an existing --initial checkpoint"
+            "DCAP/Taylor/SIRFP calibration requires the full fitting set; use --plan or an existing --initial checkpoint"
         )
     from concurrent.futures import ThreadPoolExecutor
 
@@ -303,7 +323,7 @@ def train_one(
     # Record the exact dense parent in resumable run provenance.
     job = dict(job)
     if (
-        job["method"] in ("dcap", "taylor", "magnitude", "dense_recovery")
+        job["method"] in ("dcap", "taylor", "magnitude", "sirfp", "dense_recovery")
         and not job.get("teacher_checkpoint")
         and not job.get("initial_checkpoint")
     ):
@@ -335,6 +355,10 @@ def train_one(
         input_mode=job.get("input_mode", "reflectance_change"),
         input_channels=len(input_indices(job.get("input_mode", "reflectance_change"))),
     )
+    if job.get("pretraining_checkpoint"):
+        if sha256(job["pretraining_checkpoint"]) != job["pretraining_sha256"]:
+            raise ValueError("Pretraining checkpoint changed")
+        configuration["pretraining_checkpoint"] = job["pretraining_checkpoint"]
     method = job["method"]
     teacher = None
     measurement = {}
@@ -356,7 +380,7 @@ def train_one(
             retained_initial=job["initial_checkpoint"],
             initial_sha256=job["initial_sha256"],
         )
-    elif method in ("dcap", "taylor", "magnitude"):
+    elif method in ("dcap", "taylor", "magnitude", "sirfp"):
         if (
             resume
             and (out / "initial.pt").exists()
@@ -381,6 +405,7 @@ def train_one(
                 models,
                 job,
                 design,
+                out,
             )
             save_checkpoint(model, out / "initial.pt", configuration)
     elif method == "dense_recovery":
@@ -400,7 +425,8 @@ def train_one(
             )
         model = build_model(
             configuration,
-            pretrained=configuration["architecture"] == "resnet34_deeplabv3plus",
+            pretrained=configuration["architecture"]
+            in ("resnet34_deeplabv3plus", "segformer_b2"),
         ).cuda()
     if teacher is not None:
         teacher.eval()
@@ -417,10 +443,17 @@ def train_one(
             model.eval(),
             torch.zeros(1, configuration["input_channels"], 256, 256, device="cuda"),
         )
+    if configuration["architecture"] == "segformer_b2":
+        attention_macs = model.attention_matmul_macs(256, 256)
+        measurement.update(
+            module_counter_macs=int(macs), attention_matmul_macs=int(attention_macs)
+        )
+        macs += attention_macs
     measurement.update(measured_macs=int(macs), measured_parameters=int(params))
     write(out / "structure.json", measurement)
     dense = method in ("dense", "compact")
-    settings = study()["dense" if dense else "recovery"]
+    settings = dict(study()["dense" if dense else "recovery"])
+    settings.update(job.get("training_settings", {}))
     maximum = epochs or settings["max_epochs"]
     minimum = settings["min_epochs"]
     patience = settings["dual_patience"]
@@ -586,7 +619,7 @@ def train_one(
     )
 
 
-def job_for(method, seed=42, target=0.7, cell=None):
+def job_for(method, seed=42, target=0.7, cell=None, architecture=None):
     job = dict(
         method=method,
         seed=seed,
@@ -596,7 +629,7 @@ def job_for(method, seed=42, target=0.7, cell=None):
         architecture="resunet",
         recovery_weights=(
             dict(study()["recovery_loss"])
-            if method in ("dcap", "taylor", "magnitude", "dense_recovery")
+            if method in ("dcap", "taylor", "magnitude", "sirfp", "dense_recovery")
             else {k: 0.0 for k in study()["recovery_loss"]}
         ),
         small_object_pixels=study()["evaluation"]["small_object_pixels"],
@@ -609,10 +642,19 @@ def job_for(method, seed=42, target=0.7, cell=None):
             if c["cell"] == cell
         )
         job.update(record)
-    if method in ("dcap", "taylor", "magnitude", "compact"):
+    if method in ("dcap", "taylor", "magnitude", "sirfp", "compact"):
         job["target"] = target
+    if architecture == "segformer_b2":
+        if method != "dense" or cell:
+            raise ValueError("SegFormer-B2 uses --method dense without --cell")
+        job.update(
+            architecture=architecture,
+            training_settings=read(ROOT / "configs/comparators.json")[architecture][
+                "training_settings"
+            ],
+        )
     job["name"] = (
-        (cell or method)
+        (cell or architecture or method)
         + (f"_mac{round(target * 100)}" if "target" in job else "")
         + f"_seed{seed}"
     )

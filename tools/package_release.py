@@ -8,7 +8,17 @@ import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-TOP = {"src", "configs", "metadata", "results", "data", "docs", "tests", "tools"}
+TOP = {
+    "src",
+    "configs",
+    "metadata",
+    "results",
+    "data",
+    "docs",
+    "tests",
+    "tools",
+    "licenses",
+}
 FILES = {
     "README.md",
     "LICENSE",
@@ -33,7 +43,8 @@ def included(path):
     if (
         rel.parts[0] == "data"
         and len(rel.parts) > 1
-        and rel.parts[1] not in {"README.md", "example.npz", "DATA_NOTICES.txt", "licenses"}
+        and rel.parts[1]
+        not in {"README.md", "example.npz", "DATA_NOTICES.txt", "licenses"}
     ):
         return False
     return rel.parts[0] in TOP or str(rel) in FILES

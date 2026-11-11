@@ -18,6 +18,15 @@ def build_model(configuration, pretrained=False):
             configuration.get("input_mode", "reflectance_change"),
             pretrained=pretrained,
         )
+    if architecture == "segformer_b2":
+        from .segformer import SegFormerB2
+
+        checkpoint = configuration.get("pretraining_checkpoint") if pretrained else None
+        if pretrained and not checkpoint:
+            raise ValueError(
+                "SegFormer training requires --pretraining; see docs/comparators.md"
+            )
+        return SegFormerB2(channels, checkpoint)
     if architecture == "compact_resunet":
         return VariableWidthResUNet(
             channels,
@@ -143,23 +152,20 @@ def install_assets(source, directory=None, group="main"):
 
     root = model_root(directory)
     root.mkdir(parents=True, exist_ok=True)
-    notice = read(ROOT / "metadata/notices.json")["models"]
-    source_notice = Path(source) / notice["asset"]
-    if sha256(source_notice) != notice["sha256"]:
-        raise ValueError("Model notice checksum mismatch")
-    target_notice = root / source_notice.name
-    if source_notice.resolve() != target_notice.resolve():
-        shutil.copy2(source_notice, target_notice)
-    chosen = [
-        m for m in catalog()["models"] if group == "all" or m["asset_group"] == group
-    ]
-    for record in chosen:
+    from .assets import records_for
+
+    records = records_for("models", group)
+    for record in records:
         path = Path(source) / record["asset"]
         if sha256(path) != record["sha256"]:
             raise ValueError(f"Asset checksum mismatch: {path.name}")
+    for record in records:
+        path = Path(source) / record["asset"]
         target = root / path.name
         if target.exists() and sha256(target) != record["sha256"]:
             raise FileExistsError(f"Refusing to overwrite different weights: {target}")
         if not target.exists():
             shutil.copy2(path, target)
-    return dict(installed=len(chosen), directory=str(root))
+    return dict(
+        installed=sum(r["asset"].endswith(".pt") for r in records), directory=str(root)
+    )

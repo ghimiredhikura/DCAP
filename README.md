@@ -2,7 +2,7 @@
 
 **Detail–Context Adaptive Pruning (DCAP)** combines dependency-shared channel gates, physical structured pruning and task-aware recovery. This repository provides code, processed Nepal landslide data, representative checkpoints and evidence for manuscript Figures 6–8 and 10.
 
-[**Data and models: v1.1.0 prerelease**](https://github.com/ghimiredhikura/DCAP/releases/tag/v1.1.0) · [Setup](docs/setup.md) · [Reproduction](docs/reproduction.md) · [All guides](docs/README.md)
+[**Code and comparator models: v1.2.0**](https://github.com/ghimiredhikura/DCAP/releases/tag/v1.2.0) · [Setup](docs/setup.md) · [Reproduction](docs/reproduction.md) · [All guides](docs/README.md)
 
 Verified RTX 4080 and Jetson AGX Orin deployment results are included on `main`; the tagged v1.1.0 data/model assets remain unchanged.
 
@@ -70,6 +70,8 @@ python -m dcap data install --source downloads/data
 python -m dcap evaluate --ensemble dcap70 --split test
 ```
 
+For SIRFP/SegFormer checkpoints and reproduction commands, follow the [comparator guide](docs/comparators.md).
+
 Next: [train the main comparison](docs/reproduction.md) or [benchmark an Ubuntu GPU](docs/benchmark.md). Benchmarking needs the model download only.
 
 ## Repository guide
@@ -82,8 +84,8 @@ Next: [train the main comparison](docs/reproduction.md) or [benchmark an Ubuntu 
 | [`data/`](data/README.md) | Small inference fixture and dataset notices; full rasters are release assets |
 | [`docs/`](docs/README.md) | Setup, reproduction, data, benchmark and validation guides |
 
-Six checkpoints are distributed: three dense and three DCAP models. The package reproduces the main ResUNet compression study; auxiliary comparators and regional experiments are outside this compact release.
+Fifteen checkpoints are available: three members each for dense, DCAP70, SIRFP25, SIRFP70 and SegFormer-B2. The optional [comparator guide](docs/comparators.md) covers their downloads, evaluation and training. Geographic fold retraining remains outside this compact release.
 
 ## License and citation
 
-Author code and the six author-trained checkpoints use the [MIT license](LICENSE). Dataset components retain their source terms in [DATA_NOTICES](data/DATA_NOTICES.txt). Cite the accompanying manuscript, [this software](CITATION.cff) and the source datasets.
+Author code and ResUNet checkpoints use the [MIT license](LICENSE). SegFormer-derived code and weights retain the [NVIDIA Source Code License](licenses/SegFormer-LICENSE.txt) for noncommercial research/evaluation. SIRFP upstream source is obtained separately; see [model notices](licenses/COMPARATOR_MODEL_NOTICES.txt). Dataset components retain their source terms in [DATA_NOTICES](data/DATA_NOTICES.txt). Cite the accompanying manuscript, [this software](CITATION.cff) and the source datasets.

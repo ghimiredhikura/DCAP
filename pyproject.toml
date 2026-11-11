@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dcap-landslides"
-version = "1.1.0"
+version = "1.2.0"
 description = "Dependency-shared structured pruning and spatial assessment for landslide segmentation"
 requires-python = ">=3.10"
 license = {file = "LICENSE"}
@@ -18,6 +18,7 @@ Issues = "https://github.com/ghimiredhikura/DCAP/issues"
 [project.optional-dependencies]
 dev = ["pytest>=8"]
 factorial = ["torchvision>=0.19"]
+comparators = ["timm==1.0.28", "torchvision>=0.19"]
 
 [project.scripts]
 dcap = "dcap.cli:main"

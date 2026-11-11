@@ -13,7 +13,8 @@
         "input_mode": "reflectance_change"
       },
       "parameters": 7598241,
-      "deterministic_algorithms": false
+      "deterministic_algorithms": false,
+      "release": "v1.1.0"
     },
     {
       "group": "dense",
@@ -28,7 +29,8 @@
         "input_mode": "reflectance_change"
       },
       "parameters": 7598241,
-      "deterministic_algorithms": false
+      "deterministic_algorithms": false,
+      "release": "v1.1.0"
     },
     {
       "group": "dense",
@@ -43,7 +45,8 @@
         "input_mode": "reflectance_change"
       },
       "parameters": 7598241,
-      "deterministic_algorithms": false
+      "deterministic_algorithms": false,
+      "release": "v1.1.0"
     },
     {
       "group": "dcap70",
@@ -58,7 +61,8 @@
         "input_channels": 21
       },
       "parameters": 848330,
-      "deterministic_algorithms": false
+      "deterministic_algorithms": false,
+      "release": "v1.1.0"
     },
     {
       "group": "dcap70",
@@ -73,7 +77,8 @@
         "input_channels": 21
       },
       "parameters": 879809,
-      "deterministic_algorithms": false
+      "deterministic_algorithms": false,
+      "release": "v1.1.0"
     },
     {
       "group": "dcap70",
@@ -88,7 +93,170 @@
         "input_channels": 21
       },
       "parameters": 879025,
-      "deterministic_algorithms": false
+      "deterministic_algorithms": false,
+      "release": "v1.1.0"
+    },
+    {
+      "group": "sirfp25",
+      "seed": 42,
+      "asset": "sirfp25_seed42.pt",
+      "asset_group": "comparators",
+      "release": "v1.2.0",
+      "sha256": "02f0eabc495267d2104b6d6109d61d734ab4f5d1d38c0e6213b03aa502a9bf74",
+      "bytes": 9088219,
+      "configuration": {
+        "architecture": "resunet",
+        "input_channels": 21,
+        "input_mode": "reflectance_change"
+      },
+      "parameters": 2250195,
+      "deterministic_algorithms": true,
+      "source_checkpoint_sha256": "331d3de96475256c81ae05d5d59948c2e5801e3e6fb3218c3ae097a1a68f8270",
+      "license": "MIT (study ResUNet weights)"
+    },
+    {
+      "group": "sirfp25",
+      "seed": 123,
+      "asset": "sirfp25_seed123.pt",
+      "asset_group": "comparators",
+      "release": "v1.2.0",
+      "sha256": "9a98a54bd2786e314840ce65a56a35a8aaddd527df4483728deb310373072c15",
+      "bytes": 9220445,
+      "configuration": {
+        "architecture": "resunet",
+        "input_channels": 21,
+        "input_mode": "reflectance_change"
+      },
+      "parameters": 2283164,
+      "deterministic_algorithms": true,
+      "source_checkpoint_sha256": "1a28fc28264e84173d7b3a2e8995f200483888d309ae3af112075559dedbf151",
+      "license": "MIT (study ResUNet weights)"
+    },
+    {
+      "group": "sirfp25",
+      "seed": 2026,
+      "asset": "sirfp25_seed2026.pt",
+      "asset_group": "comparators",
+      "release": "v1.2.0",
+      "sha256": "a5558bac2e1744aa753f0e45829874975201347b229d7f5856ba0b3beaf95922",
+      "bytes": 9888863,
+      "configuration": {
+        "architecture": "resunet",
+        "input_channels": 21,
+        "input_mode": "reflectance_change"
+      },
+      "parameters": 2449963,
+      "deterministic_algorithms": true,
+      "source_checkpoint_sha256": "10cb15fb468b1d416850a8612e7e37ef236c8e9420e3d0f43a0510e5aba0d221",
+      "license": "MIT (study ResUNet weights)"
+    },
+    {
+      "group": "sirfp70",
+      "seed": 42,
+      "asset": "sirfp70_seed42.pt",
+      "asset_group": "comparators",
+      "release": "v1.2.0",
+      "sha256": "41d149d317e6e0037a1ea5b8f6eef0c24acab7b7d0d80a68fc6457914a1fe57e",
+      "bytes": 2085595,
+      "configuration": {
+        "architecture": "resunet",
+        "input_channels": 21,
+        "input_mode": "reflectance_change"
+      },
+      "parameters": 502432,
+      "deterministic_algorithms": true,
+      "source_checkpoint_sha256": "d5830fdaa72f29f361027886d771ae26f595c667e2ea1fc8c3fd53a184aeace2",
+      "license": "MIT (study ResUNet weights)"
+    },
+    {
+      "group": "sirfp70",
+      "seed": 123,
+      "asset": "sirfp70_seed123.pt",
+      "asset_group": "comparators",
+      "release": "v1.2.0",
+      "sha256": "c7a4fe9740e665c1497676cc40c6a0e6aa789febe4922d98c2a50308d2877188",
+      "bytes": 2373853,
+      "configuration": {
+        "architecture": "resunet",
+        "input_channels": 21,
+        "input_mode": "reflectance_change"
+      },
+      "parameters": 574362,
+      "deterministic_algorithms": true,
+      "source_checkpoint_sha256": "81132cefd87302e0b15f9eb41df64b284f71935e70365a3b843ac3aed4d14643",
+      "license": "MIT (study ResUNet weights)"
+    },
+    {
+      "group": "sirfp70",
+      "seed": 2026,
+      "asset": "sirfp70_seed2026.pt",
+      "asset_group": "comparators",
+      "release": "v1.2.0",
+      "sha256": "708b042d68289d978365e99534ac1e03ebfb9ed58c987b8623cc58b7de7946e4",
+      "bytes": 2501535,
+      "configuration": {
+        "architecture": "resunet",
+        "input_channels": 21,
+        "input_mode": "reflectance_change"
+      },
+      "parameters": 606095,
+      "deterministic_algorithms": true,
+      "source_checkpoint_sha256": "13ceb7a206ce168ee6cccf8244ccdd85e034c17e427d3e4b19502e21c5e0a635",
+      "license": "MIT (study ResUNet weights)"
+    },
+    {
+      "group": "segformer_b2",
+      "seed": 42,
+      "asset": "segformer_b2_seed42.pt",
+      "asset_group": "comparators",
+      "release": "v1.2.0",
+      "sha256": "c201774836e0a40e1f0a15a066a9dce0417439afce8aee808bf35155a62c4683",
+      "bytes": 109739205,
+      "configuration": {
+        "architecture": "segformer_b2",
+        "input_channels": 21,
+        "input_mode": "reflectance_change"
+      },
+      "parameters": 27403841,
+      "deterministic_algorithms": true,
+      "source_checkpoint_sha256": "5fcbfcd8ac9d547437d496a989d20205857cb2b127b201aac6d616fe6ff12d3e",
+      "license": "NVIDIA Source Code License (research/noncommercial)"
+    },
+    {
+      "group": "segformer_b2",
+      "seed": 123,
+      "asset": "segformer_b2_seed123.pt",
+      "asset_group": "comparators",
+      "release": "v1.2.0",
+      "sha256": "d97dde2976fba93903a0cc42810089748924399e8da868e88c7859d2e6992c95",
+      "bytes": 109739623,
+      "configuration": {
+        "architecture": "segformer_b2",
+        "input_channels": 21,
+        "input_mode": "reflectance_change"
+      },
+      "parameters": 27403841,
+      "deterministic_algorithms": true,
+      "source_checkpoint_sha256": "73e99607d71c04118d956ec579ddc9cdaa65040457d3dad3c85fb476fe3ce276",
+      "license": "NVIDIA Source Code License (research/noncommercial)"
+    },
+    {
+      "group": "segformer_b2",
+      "seed": 2026,
+      "asset": "segformer_b2_seed2026.pt",
+      "asset_group": "comparators",
+      "release": "v1.2.0",
+      "sha256": "dbc088dd04563d934c97569cc107bb52fcf2a426c96b010ffaeb76b89bc3500f",
+      "bytes": 109739977,
+      "configuration": {
+        "architecture": "segformer_b2",
+        "input_channels": 21,
+        "input_mode": "reflectance_change"
+      },
+      "parameters": 27403841,
+      "deterministic_algorithms": true,
+      "source_checkpoint_sha256": "1bb03778d5a021e0793a3c08192d8ca62b4e94f2c787fdb4b8636ed69ce5f2ed",
+      "license": "NVIDIA Source Code License (research/noncommercial)"
     }
   ],
   "ensembles": {
@@ -127,6 +295,60 @@
         0.3333333333333333
       ],
       "scientific_source": "E1_original_dcap_mac70_full"
+    },
+    "sirfp25": {
+      "assets": [
+        "sirfp25_seed42.pt",
+        "sirfp25_seed123.pt",
+        "sirfp25_seed2026.pt"
+      ],
+      "configuration": {
+        "architecture": "resunet",
+        "input_channels": 21,
+        "input_mode": "reflectance_change"
+      },
+      "weights": [
+        0.3333333333333333,
+        0.3333333333333333,
+        0.3333333333333333
+      ],
+      "scientific_source": "E4_original_sirfp_mac25_full"
+    },
+    "sirfp70": {
+      "assets": [
+        "sirfp70_seed42.pt",
+        "sirfp70_seed123.pt",
+        "sirfp70_seed2026.pt"
+      ],
+      "configuration": {
+        "architecture": "resunet",
+        "input_channels": 21,
+        "input_mode": "reflectance_change"
+      },
+      "weights": [
+        0.3333333333333333,
+        0.3333333333333333,
+        0.3333333333333333
+      ],
+      "scientific_source": "E4_original_sirfp_mac70_full"
+    },
+    "segformer_b2": {
+      "assets": [
+        "segformer_b2_seed42.pt",
+        "segformer_b2_seed123.pt",
+        "segformer_b2_seed2026.pt"
+      ],
+      "configuration": {
+        "architecture": "segformer_b2",
+        "input_channels": 21,
+        "input_mode": "reflectance_change"
+      },
+      "weights": [
+        0.3333333333333333,
+        0.3333333333333333,
+        0.3333333333333333
+      ],
+      "scientific_source": "E5_original_segformer_b2"
     }
   }
 }

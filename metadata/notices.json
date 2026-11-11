@@ -1,10 +1,22 @@
 {
   "data": {
     "asset": "DATA_NOTICES.txt",
-    "sha256": "a5cc9edf968bc70c5aea5e24dc58b7b2276f71025d5170be3e542191fa890a26"
+    "sha256": "a5cc9edf968bc70c5aea5e24dc58b7b2276f71025d5170be3e542191fa890a26",
+    "release": "v1.1.0"
   },
   "models": {
     "asset": "MODEL_NOTICES.txt",
-    "sha256": "8b7c3f8363e61e16ce9dbe5b8b4dd139ff3c45e25b08993bea81bec176184452"
+    "sha256": "8b7c3f8363e61e16ce9dbe5b8b4dd139ff3c45e25b08993bea81bec176184452",
+    "release": "v1.1.0"
+  },
+  "comparator_models": {
+    "asset": "COMPARATOR_MODEL_NOTICES.txt",
+    "release": "v1.2.0",
+    "sha256": "ff673be11bdfde74a5f278e800b5424e783391a45f708c91c76d2ca2bb425e88"
+  },
+  "segformer_license": {
+    "asset": "SegFormer-LICENSE.txt",
+    "release": "v1.2.0",
+    "sha256": "9bb7e99b580f68b64703476fd485c9ea4e76cf925022021918ea7e095b6e1b1e"
   }
 }

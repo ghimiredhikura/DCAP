@@ -102,4 +102,4 @@ python -m pip install torchvision==0.28.0 --index-url https://download.pytorch.o
 python -m pip install -e '.[factorial]'
 ```
 
-ResUNet/DCAP training, released-model evaluation and plotting do not require torchvision.
+ResUNet/DCAP and SIRFP training/evaluation, and plotting, do not require torchvision. SegFormer requires the optional `comparators` dependencies; see [the comparator guide](comparators.md).

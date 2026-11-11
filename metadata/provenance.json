@@ -1,9 +1,9 @@
 {
-  "version": "1.1.0",
-  "date": "2026-11-10",
+  "version": "1.2.0",
+  "date": "2026-11-11",
   "repository_url": "https://github.com/ghimiredhikura/DCAP",
   "release_date": "2026-11-11",
-  "release_tag": "v1.1.0",
+  "release_tag": "v1.2.0",
   "release_status": "prerelease",
   "figures": {
     "6": "Compression trade-offs",
@@ -19,7 +19,7 @@
     "project/Revision_Round1/Manuscript_Revision/audit/restored_compact/evidence.json": "0835901c2625146cdb151d1fd1f15297f755307e814d6ddb8e359aa13e26b38c",
     "revision/analysis/grid_sensitivity_20261108_v1/results.json": "e17a2a7a0256de6d2585a258f21135785b592066176d81c48bd7a2da795b66dc"
   },
-  "checkpoint_scope": "Two complete three-member ensembles. Group Taylor, Group Magnitude and direct compact checkpoints can be regenerated using the shared training code; auxiliary comparators are outside this compact release.",
+  "checkpoint_scope": "Five complete three-member ensembles: dense, DCAP70, SIRFP25, SIRFP70 and SegFormer-B2. Other main compression-grid checkpoints can be regenerated with shared training code. Geographic fold retraining is outside this compact release.",
   "target_device_measurements": "Verified on 11 November 2026: 104 complete jobs and 1,608 prediction checks. Main contains Table 13/Figure 10 evidence; v1.1.0 assets remain unchanged.",
   "main_update_date": "2026-11-11"
 }

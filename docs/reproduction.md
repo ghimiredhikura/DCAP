@@ -7,8 +7,9 @@ Complete [environment setup](setup.md), then run commands from the repository ro
 | [1. Replay supplied evidence](#1-replay-supplied-evidence) | Reported statistics and Figures 6–8 | CPU; no asset downloads |
 | [2. Evaluate released models](#2-evaluate-released-models) | Predictions from the dense/DCAP checkpoints | Six checkpoints, processed data; NVIDIA GPU recommended |
 | [3. Retrain the main comparison](#3-retrain-the-main-comparison) | Training, pruning, recovery and model selection | Processed data, NVIDIA GPU, substantial runtime and output storage |
+| [4. SIRFP and SegFormer-B2](comparators.md) | Evaluate or retrain the comparison methods | Optional dependencies and checkpoint download |
 
-**Scope:** the main ResUNet compression study. SIRFP, SegFormer and geographic outer-fold experiments are outside this compact package. Only the dense and DCAP ensembles are supplied as checkpoints; other main methods can be retrained.
+**Scope:** the main ResUNet compression study, with optional [SIRFP and SegFormer-B2 reproduction](comparators.md). Dense, DCAP70, SIRFP25, SIRFP70 and SegFormer-B2 checkpoints are available. Other main grid methods can be retrained; geographic outer-fold retraining is outside this compact package.
 
 ## 1. Replay supplied evidence
 

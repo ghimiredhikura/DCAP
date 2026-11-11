@@ -43,7 +43,7 @@
   "bootstrap_seed": 2026,
   "primary_block_km": 20,
   "required_joint_support": 0.95,
-  "version": "1.1.0",
+  "version": "1.2.0",
   "seeds": [
     42,
     123,
@@ -119,6 +119,6 @@
   },
   "test_scope": "Retrospective held-out spatial locations in the sampled 2017-2019 years; not independent-event validation",
   "selected_ensemble": "dcap70",
-  "software_license": "MIT",
+  "software_license": "MIT for author code; SegFormer-derived components retain NVIDIA terms (see licenses/)",
   "validation_ap_tolerance": 0.01
 }

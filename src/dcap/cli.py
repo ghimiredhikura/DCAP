@@ -43,8 +43,8 @@ def build_parser():
     )
     command = commands.add_parser(
         "models",
-        help="List or install the six released checkpoints",
-        description="List or install the six released checkpoints",
+        help="List or install released checkpoints",
+        description="List or install released checkpoints",
     )
     command.add_argument("action", choices=["list", "install"])
     command.add_argument(
@@ -53,6 +53,9 @@ def build_parser():
     command.add_argument(
         "--models-root",
         help="Checkpoint directory (default: DCAP_MODELS or checkout/models)",
+    )
+    command.add_argument(
+        "--group", choices=["main", "comparators", "all"], default="main"
     )
     command = commands.add_parser(
         "data",
@@ -141,7 +144,15 @@ def build_parser():
     )
     command.add_argument(
         "--method",
-        choices=["dense", "dcap", "taylor", "magnitude", "compact", "dense_recovery"],
+        choices=[
+            "dense",
+            "dcap",
+            "taylor",
+            "magnitude",
+            "sirfp",
+            "compact",
+            "dense_recovery",
+        ],
         default="dcap",
     )
     command.add_argument("--seed", type=int, default=42, choices=[42, 123, 2026])
@@ -162,6 +173,18 @@ def build_parser():
         "--cell",
         choices=[c["cell"] for c in read(ROOT / "configs/factorial.json")["cells"]],
         help="Factorial configuration; requires --method dense",
+    )
+    command.add_argument(
+        "--architecture",
+        choices=["segformer_b2"],
+        help="Optional comparator architecture",
+    )
+    command.add_argument(
+        "--pretraining",
+        help="Converted MiT-B2 ImageNet backbone for SegFormer training",
+    )
+    command.add_argument(
+        "--sirfp-source", help="Pinned upstream SIRFP checkout, needed only for pruning"
     )
     command.add_argument("--teacher", help="Dense parent checkpoint for this seed")
     command.add_argument(
@@ -224,13 +247,23 @@ def build_parser():
         "--batch", type=int, default=1, choices=[1, 4], help=argparse.SUPPRESS
     )
     command = commands.add_parser(
+        "pretraining", help="Download and convert the pinned MiT-B2 backbone"
+    )
+    command.add_argument("--output", default="downloads/pretraining")
+    command.add_argument("--source", help="Use an already downloaded pytorch_model.bin")
+    command = commands.add_parser(
         "download",
         help="Download separate assets from a published GitHub release",
         description="Download separate assets from a published GitHub release",
     )
     command.add_argument("--repository", required=True)
-    command.add_argument("--tag", default="v1.1.0")
+    command.add_argument(
+        "--tag", help="Fallback tag for assets without a pinned release"
+    )
     command.add_argument("--kind", choices=["data", "models"], required=True)
+    command.add_argument(
+        "--group", choices=["main", "comparators", "all"], default="main"
+    )
     command.add_argument("--output", required=True)
     return parser
 
@@ -266,7 +299,7 @@ def main():
         result = (
             catalog()["ensembles"]
             if args.action == "list"
-            else install_assets(args.source, args.models_root)
+            else install_assets(args.source, args.models_root, args.group)
         )
     elif args.command == "data":
         from . import data
@@ -316,8 +349,38 @@ def main():
         from .training import job_for, train_one
 
         if args.cell and args.method != "dense":
-            parser.error("--cell is args dense factorial training configuration")
-        job = job_for(args.method, args.seed, args.target, args.cell)
+            parser.error("--cell is a dense factorial training configuration")
+        job = job_for(args.method, args.seed, args.target, args.cell, args.architecture)
+        if args.sirfp_source:
+            from .sirfp import load_scorer
+
+            load_scorer(args.sirfp_source)
+            job["sirfp_source"] = str(Path(args.sirfp_source).resolve())
+        if (
+            args.method == "sirfp"
+            and not args.plan
+            and not args.initial
+            and not args.sirfp_source
+        ):
+            parser.error(
+                "SIRFP pruning requires --sirfp-source; see docs/comparators.md"
+            )
+        if args.pretraining:
+            from .segformer import backbone_digest
+
+            expected = read(ROOT / "configs/comparators.json")["segformer_b2"][
+                "backbone_tensor_sha256"
+            ]
+            actual = sha256(args.pretraining)
+            state = torch.load(args.pretraining, map_location="cpu", weights_only=True)
+            if backbone_digest(state) != expected:
+                parser.error(
+                    "Converted MiT-B2 checkpoint checksum differs; see docs/comparators.md"
+                )
+            job.update(
+                pretraining_checkpoint=str(Path(args.pretraining).resolve()),
+                pretraining_sha256=actual,
+            )
         job["gate_objective"] = args.gate_objective
         if args.gate_epochs is not None:
             job["gate_epochs"] = args.gate_epochs
@@ -352,6 +415,13 @@ def main():
                 design=design,
             )
         )
+    elif args.command == "pretraining":
+        import torch
+
+        torch.set_num_threads(4)
+        from .segformer import prepare_pretraining
+
+        result = prepare_pretraining(args.output, args.source)
     elif args.command == "benchmark":
         from .benchmark import run, worker
 
@@ -370,5 +440,5 @@ def main():
     else:
         from .assets import download
 
-        result = download(args.repository, args.tag, args.kind, args.output)
+        result = download(args.repository, args.tag, args.kind, args.output, args.group)
     print(json.dumps(result, indent=2, allow_nan=False))
