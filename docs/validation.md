@@ -2,6 +2,8 @@
 
 Checked on Ubuntu with one RTX 5090 selected for GPU inference. Exact package versions are in [tested_environment.json](tested_environment.json). This record concerns release correctness, not the pending RTX 4080/Jetson Orin manuscript measurements.
 
+## Completed checks
+
 | Check | Outcome |
 |---|---|
 | Data installation and SHA-256 verification | All three archives and 2,640 rasters passed; 1,320 chips with 990/132/198 partitions |
@@ -20,4 +22,11 @@ Checked on Ubuntu with one RTX 5090 selected for GPU inference. Exact package ve
 | Campaign collection | Complete collection and figure generation checked with synthetic completed-run fixtures; test fixtures are excluded from the release |
 | Source quality and distribution | Static checks passed; unused helpers/duplicate imports removed; manifest and portable-checkout verification passed |
 
-The full 63-model campaign was not retrained as a packaging test. The recheck changed packaging, documentation and run-integrity checks; published numerical evidence, checkpoints and processed rasters are unchanged. Its training, inference and analysis components were exercised as above; shortened training outputs are excluded from distributed scientific results. Remote preparation was checked on one chip, while the full mask lineage and all packaged raster hashes were checked locally. Cross-machine training trajectories and remote source reprocessing are not guaranteed to be bitwise identical. The supplied checkpoints, frozen raster assets and compact statistics are the direct route to reproducing the reported values.
+## What these checks do not establish
+
+- **Full retraining:** the 63-model campaign was not repeated as a packaging test. Training, inference and collection were checked separately; synthetic/smoke outputs are excluded from scientific evidence.
+- **Complete source reprocessing:** live downloading/rebuilding was checked on one chip. All packaged raster hashes and all 1,320 reconstructed masks were checked locally.
+- **Bitwise portability:** training trajectories and upstream source reprocessing can vary across machines or provider updates.
+- **Target-device performance:** RTX 4080 and Jetson Orin measurements remain pending.
+
+Use the supplied checkpoints, frozen rasters and compact statistics for direct replay of the reported values. See the [reproduction routes](reproduction.md).

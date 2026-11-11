@@ -1,18 +1,18 @@
 # Reproducing the main results
 
-## Setup and scope
+Complete [environment setup](setup.md), then run commands from the repository root. Choose the route that matches what you want to verify.
 
-Complete [environment setup](setup.md) first and run commands from the checkout root. Keep this source checkout because configurations and evidence live beside `src/`. `DCAP_ROOT` can explicitly identify it when invoking the package elsewhere. The recorded environment is in [tested_environment.json](tested_environment.json).
+| Route | What it checks | Requirements |
+|---|---|---|
+| [1. Replay supplied evidence](#1-replay-supplied-evidence) | Reported statistics and Figures 6–8 | CPU; no asset downloads |
+| [2. Evaluate released models](#2-evaluate-released-models) | Predictions from the dense/DCAP checkpoints | Six checkpoints, processed data; NVIDIA GPU recommended |
+| [3. Retrain the main comparison](#3-retrain-the-main-comparison) | Training, pruning, recovery and model selection | Processed data, NVIDIA GPU, substantial runtime and output storage |
 
-The release contains the main dense and DCAP ensembles, 20 compression operating points for Figure 6, matched 70%-target paired intervals for Figure 7, and 72 sensitivity rows for Figure 8. It includes no optimizer histories or full prediction arrays. SIRFP, SegFormer, spatial outer-fold studies and other auxiliary experiments are outside this compact release's execution matrix. Their checkpoint archives are not required for Figures 6–8. Third-party comparator source is not redistributed here.
+**Scope:** the main ResUNet compression study. SIRFP, SegFormer and geographic outer-fold experiments are outside this compact package. Only the dense and DCAP ensembles are supplied as checkpoints; other main methods can be retrained.
 
-## Fixed protocol
+## 1. Replay supplied evidence
 
-`configs/study.json` gives the optimizer, recovery weights, margins, stopping rules and compression targets. `configs/design.json` fixes fitting, validation, calibration subsets and fitting-only normalization; `metadata/split.csv` records the 990/132/198 partitions. Seeds 42, 123 and 2026 define equally weighted three-model ensembles. Gate training uses 128 fitting chips; Taylor importance uses 32. Channel removal targets measured MACs rather than parameter counts. Dense and compact models train from scratch; pruned models recover from the corresponding dense seed. The main Group Taylor and Group Magnitude comparisons use the same full recovery loss as DCAP.
-
-Evaluation averages sigmoid probabilities in FP32, using AMP forwards for manuscript replay. Validation endpoints use leave-one-spatial-block-out threshold fits; test uses the global validation threshold. AP uses 1,001 score bins. Small-component recall uses the fitting-derived 41-pixel area threshold, 50% predicted coverage and connected components; boundary F1 uses a two-pixel tolerance. Paired bootstrap inference uses the same draws for both models, 10,000 draws and a 20 km primary grid. Undefined constraint draws fail the joint decision. A pruning candidate qualifies when validation AP is at least dense AP minus 0.01 and validation joint support is ≥0.95; the greatest measured MAC reduction among qualifying candidates is selected, with the dense reference as fallback. Test results never select the budget.
-
-## Replay supplied evidence
+### Run
 
 ```bash
 python -m dcap verify
@@ -20,17 +20,42 @@ OPENBLAS_NUM_THREADS=2 python -m dcap replay --grid
 python -m dcap plot --figures 6 7 8
 ```
 
-`replay` recomputes endpoints, intervals and support from per-chip additive statistics in `results/spatial_evidence.npz`. It reproduces the dense/DCAP metrics, their Figure 7 intervals and all Figure 8 values without inference. Figure 6 and the remaining Figure 7 methods plot the supplied small CSV tables; obtaining their statistics anew requires training the corresponding models. In Figure 8, 0 is the unshifted grid and E, N and EN shift its origin by half a block east, north or both. Margin multipliers scale the four preservation tolerances, not the probabilities.
+### Inspect
 
-## Evaluate the released checkpoints
+| Output | Expected content |
+|---|---|
+| `verify` output | `"passed": true`; fitting/validation/test counts 990/132/198 |
+| `generated/replay/representative_replay.json` | Dense/DCAP endpoints and paired spatial intervals; DCAP joint support 1.0000 on validation and 0.9484 on test |
+| `generated/replay/figure8.csv` | All 72 grid/margin sensitivity rows |
+| `generated/figures/` | Figures 6–8 as PDF and PNG |
 
-Download the model and data assets once, then install and evaluate them:
+`replay` recomputes statistics from `results/spatial_evidence.npz`; it does not run model inference. It covers the dense/DCAP metrics, their Figure 7 intervals and all Figure 8 values. The other Figure 6/7 curves use supplied CSV values; regenerating those from predictions requires Route 3.
+
+To check agreement with the frozen evidence and the package's integrity rules:
+
+```bash
+python -m pip install -e '.[dev]'
+OPENBLAS_NUM_THREADS=2 python -m pytest -q
+```
+
+See [validation](validation.md) for the checks performed and their limits.
+
+## 2. Evaluate released models
+
+### Download and install
+
+About 97 MiB of weights and 3.43 GiB of archives; allow roughly 8 GB for downloads and extracted data. See [data preparation](data.md) for offline installation or rebuilding from source.
 
 ```bash
 python -m dcap download --repository ghimiredhikura/DCAP --tag v1.1.0 --kind models --output downloads/models
 python -m dcap download --repository ghimiredhikura/DCAP --tag v1.1.0 --kind data --output downloads/data
 python -m dcap models install --source downloads/models
 python -m dcap data install --source downloads/data
+```
+
+### Evaluate both ensembles
+
+```bash
 for model in dense dcap70; do
   for split in validation test; do
     CUDA_VISIBLE_DEVICES=0 python -m dcap evaluate --ensemble "$model" --split "$split"
@@ -38,11 +63,19 @@ for model in dense dcap70; do
 done
 ```
 
-The evaluator checks weight hashes and uses the stored validation thresholds for those exact released ensembles. Each result comprises JSON endpoints/provenance and an NPZ of per-chip additive statistics. The JSON records the NPZ checksum; collection rejects a missing or changed statistics file. For a CPU functional check use `--device cpu --precision fp32`; CPU/FP32 endpoints are not expected to be bitwise identical to the AMP study results. Different GPU/library combinations can produce small numerical differences.
+### Compare outputs
 
-## Train and regenerate the main grid
+- `generated/evaluation/{model}_{split}.json`: endpoints, checkpoint hashes and threshold provenance.
+- Matching `.npz`: per-chip statistics, with its checksum recorded in the JSON.
+- Reference values: [`results/representative.json`](../results/representative.json) and the [README table](../README.md#main-results).
 
-Inspect the plan before starting a substantial run:
+The evaluator uses the stored validation thresholds for these exact checkpoints. For a CPU functional check, add `--device cpu --precision fp32`. CPU/FP32 and different GPU/library combinations can differ slightly from the AMP study results.
+
+## 3. Retrain the main comparison
+
+### Inspect the plan, then run each phase
+
+The campaign trains **63 models**: three dense references plus three members at five compression targets for DCAP, Group Taylor, Group Magnitude and direct compact models. Jobs run sequentially on one visible GPU.
 
 ```bash
 python -m dcap campaign plan --output generated/campaign
@@ -52,9 +85,19 @@ OPENBLAS_NUM_THREADS=2 python -m dcap campaign collect --output generated/campai
 python -m dcap plot --source generated/campaign/results --output generated/campaign/figures
 ```
 
-The campaign trains 63 models: three dense references and three members at five targets for DCAP, Group Taylor, Group Magnitude and direct compact models. It runs sequentially on one visible GPU. Repeating a completed phase verifies and reuses matching outputs. Training continues from local optimizer/RNG state after interruption; if interrupted during pruning preparation, it reuses a complete initial checkpoint or repeats preparation. Evaluation requires all planned fits to have completed. Do not delete `complete.json`, `configuration.json`, `structure.json` or the selected checkpoints before collection. Reserve substantially more storage and time than needed for the compact release. Each training directory contains settings, structure measurements, history, selected tensor-only weights and local resume state. Collection applies the AP guard and joint rule using validation data, then writes plot-ready tables, `selections.json` and paired comparisons. Direct compact models remain controls. Figures 7 and 8 retain the matched 70% target; budget-selection results are recorded separately. The across-method decision in this compact campaign covers the three included pruning methods, not the additional SIRFP comparison. The supplied published values remain unchanged; a new training campaign produces its own estimates.
+### Outputs and continuation
 
-For an individual run:
+- Training folders retain settings, measured structures, selected weights, history and optimizer/RNG resume state.
+- Collection writes result tables, paired comparisons and `selections.json`; figures use these newly generated estimates.
+- Repeat a campaign phase to verify/reuse completed outputs and resume unfinished training. Interrupted pruning preparation reuses a complete initial checkpoint or repeats preparation.
+- Evaluation requires all planned fits. Keep `complete.json`, `configuration.json`, `structure.json` and selected checkpoints until collection finishes.
+- Reserve more storage than inference requires: the campaign retains optimizer states for many fits.
+
+Selection uses validation AP and joint support only. Direct compact models remain controls; Figures 7–8 use the matched 70% target. Across-method selection covers the three included pruning methods. The full 63-model campaign was not repeated during package validation.
+
+## Optional: individual runs
+
+### Train a dense parent and a DCAP model
 
 ```bash
 python -m dcap train --method dense --seed 42 --output generated/dense42
@@ -62,9 +105,15 @@ python -m dcap train --method dcap --seed 42 --target 0.70 \
   --teacher generated/dense42/checkpoint.pt --output generated/dcap42
 ```
 
-The same command supports `taylor`, `magnitude`, `compact`, `dense_recovery`, `--recovery supervised`, a single `--omit-loss`, and the 16 design cells in `configs/factorial.json`. These reuse the same input and loss functions. For factorial cells using DeepLabV3+ with a ResNet-34 encoder, install the optional dependency with `python -m pip install -e '.[factorial]'` (a torchvision wheel matching PyTorch). Those cells download the official torchvision ImageNet encoder weights at training time; the weights are not bundled. A short training check is `train --method dense --smoke --output generated/smoke`; smoke mode trains on eight chips for two epochs and is not scientific evidence. Fresh DCAP calibration requires the complete fitting set, so it is not silently shortened by smoke mode.
+- Other methods: `taylor`, `magnitude`, `compact`, `dense_recovery`.
+- Recovery controls: `--recovery supervised` or a single `--omit-loss`.
+- Resume one run: repeat its original command with `--resume`, preserving options and output path.
+- Functional smoke check: `train --method dense --smoke --output generated/smoke` (eight fitting chips, two epochs). Fresh DCAP calibration still requires the full fitting set.
+- The 16 cells in [`configs/factorial.json`](../configs/factorial.json) reuse the same input/loss code. DeepLabV3+ cells need the [optional torchvision setup](setup.md#optional-deeplabv3-cells) and download official ImageNet encoder weights at training time.
 
-For three newly trained DCAP checkpoints, evaluate validation before test (substitute your actual run paths):
+### Evaluate newly trained checkpoints
+
+After training all three members, fit validation thresholds **before** evaluating test. Substitute your actual checkpoint paths:
 
 ```bash
 python -m dcap evaluate --ensemble custom_dcap --split validation \
@@ -76,21 +125,37 @@ python -m dcap evaluate --ensemble custom_dcap --split test \
   --output generated/custom_dcap_test.json
 ```
 
-The evaluator rejects a validation result from different checkpoint hashes or precision. Do not use released thresholds for newly trained models. For an individual interrupted run, repeat its original `train` command with `--resume`; retain the same options and output directory.
+Do not reuse released thresholds for new weights. The evaluator rejects validation records from different checkpoint hashes or precision; collection rejects missing/changed statistics.
 
-## Verification
+## Protocol reference
 
-```bash
-python -m pip install -e '.[dev]'
-OPENBLAS_NUM_THREADS=2 pytest -q
-```
+| Item | Fixed setting |
+|---|---|
+| Configuration | [`study.json`](../configs/study.json): optimizer, recovery loss, margins, stopping rules and budgets; [`design.json`](../configs/design.json): subsets and fitting-only normalization |
+| Partitions | 990 fitting / 132 validation / 198 test chips in [`split.csv`](../metadata/split.csv) |
+| Replication | Seeds 42, 123, 2026; equally weighted three-model ensembles |
+| Calibration | 128 fitting chips for gates; 32 for Group Taylor importance |
+| Model fitting | Dense/direct compact from scratch; pruned models inherit the corresponding dense parent and use the same full recovery loss |
+| Compression | Measured MAC reduction, rather than parameter-count reduction |
+| Predictions | AMP forwards; sigmoid probabilities averaged in FP32 |
+| Thresholds | Leave-one-spatial-block-out fits on validation; global validation threshold on test |
+| Metrics | AP: 1,001 score bins; small-component recall: fitting-derived 41-pixel area cutoff and 50% coverage; boundary F1: two-pixel tolerance |
+| Spatial inference | Paired 20 km blocks, 10,000 shared bootstrap draws; undefined constraint draws fail joint support |
+| Selection | Validation AP ≥ dense AP − 0.01 and joint support ≥ 0.95; greatest passing MAC reduction, otherwise dense fallback |
+| Figure 8 | 10/20/30 km blocks; 0/E/N/EN denote unshifted/half-block east/north/both shifts; multipliers scale preservation tolerances |
 
-Tests check the frozen scientific evidence and sensitivity values, threshold provenance and source-mask lineage. Host execution details and limits are recorded in `validation.md`. GPU training trajectories are not promised to be bitwise identical across machines.
+Training trajectories need not be bitwise identical across machines. The frozen checkpoints, processed rasters and compact statistics provide the direct route to replaying the reported values.
 
-## Reading the code
+## Code map
 
-Start at `cli.py` for the commands, then `experiment.py` for the four campaign phases. The main path is:
+Start with [`cli.py`](../src/dcap/cli.py), then [`experiment.py`](../src/dcap/experiment.py) for campaign orchestration.
 
-`data.py` → `training.py` → `algorithm.py` → `models.py` → `evaluation.py` → `analysis.py` → `figures.py`.
+| Files | Role |
+|---|---|
+| `data.py`, `preprocess.py` | Inputs and source-data preparation |
+| `training.py`, `training_helpers.py`, `losses.py` | Fitting, recovery and shared objectives |
+| `algorithm.py`, `models.py` | Shared gates, physical pruning, inheritance and model loading |
+| `evaluation.py`, `analysis.py`, `figures.py` | Predictions, spatial inference and plots |
+| `benchmark.py` | Timing with the same model loader and ensemble forward function |
 
-`algorithm.py` contains shared-gate learning, physical channel removal and inheritance selection. `losses.py` and `training_helpers.py` provide the common losses, moving averages and validation metrics. `preprocess.py` handles source-data preparation; `benchmark.py` uses the same model loader and forward function as evaluation. Functions use direct loops and ordinary PyTorch/NumPy operations; no separate implementation is maintained for each experiment.
+Keep the editable checkout. Use `DCAP_ROOT` to identify it when invoking the package elsewhere.

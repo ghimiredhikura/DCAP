@@ -68,7 +68,7 @@ def plot(numbers=(6, 7, 8), source=None, output=None):
     if 6 in numbers:
         data = pd.read_csv(source / "figure6.csv")
         dense = read(source / "representative.json")["dense_test"]
-        colors = {**COLORS, "taylor": "#9e95aa", "magnitude": "#af9b8c"}
+        colors = {**COLORS, "dcap": "#A61C2B", "taylor": "#9e95aa", "magnitude": "#af9b8c"}
         fig, axes = plt.subplots(2, 3, figsize=(11.5, 7.2))
         fig.subplots_adjust(hspace=0.38, wspace=0.30, bottom=0.16)
         for i, ax in enumerate(axes.flat):

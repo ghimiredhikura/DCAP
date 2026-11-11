@@ -1,42 +1,54 @@
-# Release layout and publication
+# Release assets and packaging
 
-The source is hosted at [ghimiredhikura/DCAP](https://github.com/ghimiredhikura/DCAP). The [v1.1.0 prerelease](https://github.com/ghimiredhikura/DCAP/releases/tag/v1.1.0) contains the processed data and representative model ensembles. RTX 4080/Jetson Orin deployment measurements remain pending and are not included in the reported results. No software DOI is assigned.
+[Repository](https://github.com/ghimiredhikura/DCAP) · [v1.1.0 prerelease](https://github.com/ghimiredhikura/DCAP/releases/tag/v1.1.0)
 
-## Asset layout
+RTX 4080/Jetson Orin measurements are pending. No software DOI is assigned.
 
-Git history contains `src/`, `configs/`, `metadata/`, `results/`, the `data/` notices/example, `docs/`, `tests/` and `tools/`. Generated outputs, installed rasters, model weights, virtual environments and local caches are excluded.
+## Where files live
 
-Release assets contain six `.pt` files and `MODEL_NOTICES.txt`, three year-specific data ZIPs and `DATA_NOTICES.txt`, the data catalog and DEM license, a portable source ZIP, and checksums. Each data ZIP includes its attribution and DEM license. Catalogs in `metadata/` record asset filenames, sizes and SHA-256 hashes. The release's `SHA256SUMS` uses the flat asset filenames; after manually downloading the assets to one folder, run `sha256sum -c SHA256SUMS` there.
+| Location | Contents |
+|---|---|
+| Git repository | Code, configuration, metadata, selected results, example fixture, notices and guides |
+| Model assets | Six `.pt` checkpoints and `MODEL_NOTICES.txt` |
+| Data assets | Three year-specific ZIPs, `DATA_CATALOG.json`, `DATA_NOTICES.txt` and DEM license |
+| Source asset | Portable ZIP extracting to `dcap/`; matches the tagged checkout without Git metadata |
+| Checksums | `SHA256SUMS` for all attached files; separate source-ZIP checksum |
 
-The download helper verifies the required assets against the catalogs:
+Installed rasters, weights, generated outputs, environments and caches stay outside Git history. Each data ZIP contains its notices and full DEM license.
+
+## Download and verify
+
+Follow [model evaluation](reproduction.md#2-evaluate-released-models) or [data installation](data.md#1-install-the-processed-dataset). The download helper checks filenames and SHA-256 values against the catalogs in `metadata/`.
+
+For manual downloads, place all attached assets in one folder and run:
 
 ```bash
-python -m dcap download --repository ghimiredhikura/DCAP --tag v1.1.0 --kind models --output downloads/models
-python -m dcap download --repository ghimiredhikura/DCAP --tag v1.1.0 --kind data --output downloads/data
-python -m dcap models install --source downloads/models
-python -m dcap data install --source downloads/data
+sha256sum -c SHA256SUMS
 ```
 
-Data archive installation also extracts the full DEM license. The portable source ZIP extracts to `dcap/`; it contains the same files as the tagged source checkout, excluding Git metadata.
+This manifest uses flat asset filenames.
 
-## Preparing later versions
+## Prepare a later version
 
-1. Update the version and date in `CITATION.cff`, `pyproject.toml` and `metadata/provenance.json`, and the documented asset tag.
-2. Run `python tools/package_release.py --output ../dcap-source.zip`, `python -m dcap verify` and `pytest -q` from the repository root. The packaging tool rebuilds the source manifest and excludes generated results and installed assets.
-3. Inspect the resulting source archive and attach the separately catalogued assets. Preserve `LICENSE`, `DATA_NOTICES.txt`, the DEM license and `MODEL_NOTICES.txt`.
-4. Check the public links from a fresh download, then place the repository/version link in the manuscript Data Availability statement. A DOI may be added after archival deposition; none is claimed here.
+1. Update the version/date in `CITATION.cff`, `pyproject.toml` and `metadata/provenance.json`, plus the documented asset tag.
+2. Rebuild and check the source package from the repository root:
 
-Author code and selected author-trained ResUNet weights are MIT licensed. Dependencies are installed from their upstream distributions and retain their licenses. No ImageNet pretrained parameters, SegFormer weights, vendor source, administrative boundaries or unrelated results are bundled. The main pruning baselines use the installed Torch-Pruning package. The data notices, rather than the software MIT license, govern all included dataset derivatives.
+   ```bash
+   python tools/package_release.py --output ../dcap-source.zip
+   python -m dcap verify
+   python -m pytest -q
+   ```
 
-## File map
+3. Inspect the source ZIP and separately catalogued assets. Keep all notices and licenses.
+4. Publish under a new tag, then verify anonymous downloads and checksums before citing the version.
 
-| Location | Purpose |
-|---|---|
-| `src/dcap/` | Reusable model, loss, pruning, data, inference and analysis implementation |
-| `configs/` | Main protocol and factorial cell definitions |
-| `metadata/` | Splits, provenance, source geometries/scenes, asset checksums |
-| `results/` | Only the evidence required for Figures 6–8 and the dense/DCAP example |
-| `data/` | Small inference fixture and source notices; installed rasters are ignored |
-| `docs/` | Reproduction, data, benchmark and validation instructions |
-| `tools/package_release.py` | Source manifest and portable ZIP creation |
-| `tests/` | Frozen-evidence, threshold-provenance and structural-pruning regression checks |
+Documentation updates on `main` may follow a release; an existing tag and its archive retain their published snapshot.
+
+## License boundaries
+
+- **MIT:** author code and the selected author-trained ResUNet checkpoints.
+- **Source terms:** dataset derivatives, including the example fixture; see [data notices](../data/DATA_NOTICES.txt).
+- **Dependencies:** installed from upstream distributions under their own licenses; main pruning baselines use Torch-Pruning.
+- **Not bundled:** ImageNet pretrained parameters, SegFormer weights, vendor code, administrative boundaries or unrelated results.
+
+See the [repository overview](../README.md#repository-guide) for the source-folder map.

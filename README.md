@@ -1,33 +1,56 @@
 # DCAP for landslide segmentation
 
-Code and selected evidence for **Detail–Context Adaptive Pruning (DCAP)**: dependency-shared channel gates, physical structured pruning and task-aware recovery. The Nepal study uses paired Sentinel-2 imagery, terrain and spatially separated fitting, validation and test locations.
+**Detail–Context Adaptive Pruning (DCAP)** combines dependency-shared channel gates, physical structured pruning and task-aware recovery. This repository provides code, processed Nepal landslide data, representative checkpoints and evidence for manuscript Figures 6–8.
 
-[**v1.1.0 prerelease**](https://github.com/ghimiredhikura/DCAP/releases/tag/v1.1.0): code, processed data, representative checkpoints and Figures 6–8 evidence are available. RTX 4080 and Jetson Orin deployment measurements are pending.
+[**Data and models: v1.1.0 prerelease**](https://github.com/ghimiredhikura/DCAP/releases/tag/v1.1.0) · [Setup](docs/setup.md) · [Reproduction](docs/reproduction.md) · [All guides](docs/README.md)
 
-| Three-model ensemble | MAC reduction | Test AP | Test Dice | Small-scar recall | Joint support |
-|---|---:|---:|---:|---:|---:|
-| Dense reference | 0.00% | 0.4333 | 0.4760 | 0.2895 | — |
-| DCAP | 70.03% | 0.4268 | 0.4791 | 0.3158 | 0.9484 |
+RTX 4080 and Jetson Orin deployment measurements are pending.
 
-The compression level was selected on validation data. Test joint support is slightly below the specified 0.95 cutoff; these results do not establish uniform superiority over the baselines. Test locations belong to the sampled 2017–2019 years.
+## Main results
+
+Retrospective test results for three-model ensembles on withheld locations from 2017–2019. The 70% rows compare methods at a common target; the final row is Group Taylor's validation-selected operating point. MAC reduction reports the measured value.
+
+| Model (MAC reduction target) | MAC reduction | AP ↑ | Dice ↑ | Small-scar recall ↑ | Boundary F1 ↑ | Balanced Brier ↓ | Joint support ↑ |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Dense reference | 0.00% | 0.4333 | 0.4760 | 0.2895 | 0.5425 | 0.2310 | — |
+| DCAP (70%) | 70.03% | 0.4268 | 0.4791 | 0.3158 | 0.5445 | 0.2280 | 0.9484 |
+| Group Taylor (70%) | 70.00% | 0.4226 | 0.4502 | 0.2632 | 0.5214 | 0.2322 | 0.1742 |
+| Group Magnitude (70%) | 69.69% | 0.3683 | 0.4657 | 0.2895 | 0.5294 | 0.2587 | 0.0006 |
+| Direct compact (70%) | 69.82% | 0.4250 | 0.4525 | 0.2895 | 0.5167 | 0.2444 | 0.2109 |
+| Group Taylor (85%) | 85.11% | 0.4191 | 0.4607 | 0.3684 | 0.5241 | 0.2371 | 0.7933 |
+
+Validation selects DCAP at 70.03% MAC reduction and Group Taylor at 85.11%. Their test joint support falls below the specified 0.95 cutoff; the results do not establish uniform superiority. Values come from [the compression grid](results/figure6.csv), [dense results](results/representative.json) and [validation selection](results/selection.csv).
+
+[![Figure 6: test performance across measured MAC reductions for DCAP, Group Taylor, Group Magnitude and direct compact models.](results/figures/figure6.png)](results/figures/figure6.pdf)
+
+**Figure 6.** Compression trade-offs across five targets. Dotted lines show the dense reference, or the 0.95 cutoff for joint support. [PDF](results/figures/figure6.pdf) · [Plot data](results/figure6.csv)
 
 ## Quick start
 
-Clone the repository, then activate an environment with Python and PyTorch. For a new environment, follow the short [setup guide](docs/setup.md) (conda or venv, CPU or NVIDIA GPU). Run subsequent commands from the repository root.
+### 1. Clone and set up
+
+Activate an environment with Python and PyTorch, or follow the [setup guide](docs/setup.md) to create one. Run commands from the repository root.
 
 ```bash
 git clone https://github.com/ghimiredhikura/DCAP.git
 cd DCAP
 python -m pip install -e .
 python -m pip check
+```
+
+### 2. Reproduce plots and statistical summaries
+
+No model or raster downloads are needed. Outputs go to `generated/`.
+
+```bash
 python -m dcap verify
 python -m dcap plot --figures 6 7 8
 OPENBLAS_NUM_THREADS=2 python -m dcap replay --grid
 ```
 
-Plotting and statistical replay need no model or raster downloads. Outputs go to `generated/`.
+### 3. Evaluate the released models
 
-For inference, download and install the separate release assets (about 97 MiB of checkpoints and 3.43 GiB of data). Downloads and installation verify their checksums; see [data instructions](docs/data.md) for source preparation and licensing.
+Download about **97 MiB of checkpoints** and **3.43 GiB of data**, with checksum verification:
 
 ```bash
 python -m dcap download --repository ghimiredhikura/DCAP --tag v1.1.0 --kind models --output downloads/models
@@ -35,20 +58,22 @@ python -m dcap download --repository ghimiredhikura/DCAP --tag v1.1.0 --kind dat
 python -m dcap models install --source downloads/models
 python -m dcap data install --source downloads/data
 python -m dcap evaluate --ensemble dcap70 --split test
-python -m dcap benchmark --output generated/ubuntu_benchmark
 ```
 
-## Contents and guides
+Next: [train the main comparison](docs/reproduction.md) or [benchmark an Ubuntu GPU](docs/benchmark.md). Benchmarking needs the model download only.
 
-- [`src/dcap/`](src/dcap/): shared implementation for preparation, training, inference, statistics and plots.
-- [`configs/`](configs/) and [`metadata/`](metadata/): study settings, fixed splits, source geometries, thresholds and checksums.
-- [`results/`](results/): the data and PDFs for manuscript Figures 6–8 and compact dense/DCAP spatial evidence.
-- [Environment setup](docs/setup.md): existing environments or a separate conda/venv installation.
-- [Reproduction](docs/reproduction.md): checkpoint evaluation, training and regeneration of the compression grid.
-- [Data and licenses](docs/data.md): processed data, source downloads and rebuilding the chips.
-- [Ubuntu benchmark](docs/benchmark.md): timing protocol and host verification.
-- [Release guide](docs/release.md): versioned assets, attribution and source packaging.
+## Repository guide
 
-Only six checkpoints are distributed: the three dense and three DCAP members. Data and model assets remain separate from Git history. This release focuses on the main ResUNet compression study; it does not bundle every auxiliary comparator or regional experiment.
+| Folder | Contents |
+|---|---|
+| [`src/dcap/`](src/dcap/) | Shared preparation, training, pruning, inference, analysis and plotting code |
+| [`configs/`](configs/) / [`metadata/`](metadata/) | Protocol, fixed splits, source geometries, thresholds and checksums |
+| [`results/`](results/) | Figures 6–8, plot tables and compact spatial evidence |
+| [`data/`](data/README.md) | Small inference fixture and dataset notices; full rasters are release assets |
+| [`docs/`](docs/README.md) | Setup, reproduction, data, benchmark and validation guides |
 
-Author code and the six author-trained checkpoints use the [MIT license](LICENSE). Dataset components retain their source terms in [DATA_NOTICES](data/DATA_NOTICES.txt). Please cite the accompanying manuscript, this software via [CITATION.cff](CITATION.cff), and the source datasets.
+Six checkpoints are distributed: three dense and three DCAP models. The package reproduces the main ResUNet compression study; auxiliary comparators and regional experiments are outside this compact release.
+
+## License and citation
+
+Author code and the six author-trained checkpoints use the [MIT license](LICENSE). Dataset components retain their source terms in [DATA_NOTICES](data/DATA_NOTICES.txt). Cite the accompanying manuscript, [this software](CITATION.cff) and the source datasets.

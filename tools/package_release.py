@@ -33,7 +33,7 @@ def included(path):
     if (
         rel.parts[0] == "data"
         and len(rel.parts) > 1
-        and rel.parts[1] not in {"example.npz", "DATA_NOTICES.txt", "licenses"}
+        and rel.parts[1] not in {"README.md", "example.npz", "DATA_NOTICES.txt", "licenses"}
     ):
         return False
     return rel.parts[0] in TOP or str(rel) in FILES
