@@ -8,7 +8,7 @@ Verified RTX 4080 and Jetson AGX Orin deployment results are included on `main`;
 
 ## Main results
 
-Retrospective test results for three-model ensembles on withheld locations from 2017–2019. The 70% rows compare methods at a common target; the final row is Group Taylor's validation-selected operating point. MAC reduction reports the measured value.
+Retrospective test results for three-model ensembles on withheld locations from 2017–2019. All compressed models use a common 70% target. MAC reduction reports the measured value.
 
 | Model (MAC reduction target) | MAC reduction | AP ↑ | Dice ↑ | Small-scar recall ↑ | Boundary F1 ↑ | Balanced Brier ↓ | Joint support ↑ |
 |---|---:|---:|---:|---:|---:|---:|---:|
@@ -17,9 +17,8 @@ Retrospective test results for three-model ensembles on withheld locations from 
 | Group Taylor (70%) | 70.00% | 0.4226 | 0.4502 | 0.2632 | 0.5214 | 0.2322 | 0.1742 |
 | Group Magnitude (70%) | 69.69% | 0.3683 | 0.4657 | 0.2895 | 0.5294 | 0.2587 | 0.0006 |
 | Direct compact (70%) | 69.82% | 0.4250 | 0.4525 | 0.2895 | 0.5167 | 0.2444 | 0.2109 |
-| Group Taylor (85%) | 85.11% | 0.4191 | 0.4607 | 0.3684 | 0.5241 | 0.2371 | 0.7933 |
 
-Validation selects DCAP at 70.03% MAC reduction and Group Taylor at 85.11%. Their test joint support falls below the specified 0.95 cutoff; the results do not establish uniform superiority. Values come from [the compression grid](results/figure6.csv), [dense results](results/representative.json) and [validation selection](results/selection.csv).
+DCAP's test joint support of 0.9484 remains below the specified 0.95 cutoff; the comparison does not establish joint preservation or uniform superiority. Values come from [the compression grid](results/figure6.csv) and [dense results](results/representative.json). All budgets and validation-selected operating points remain in [the complete table](results/operating_points.csv) and [selection results](results/selection.csv).
 
 [![Figure 6: test performance across measured MAC reductions for DCAP, Group Taylor, Group Magnitude and direct compact models.](results/figures/figure6.png)](results/figures/figure6.pdf)
 
