@@ -95,6 +95,7 @@ def plot(numbers=(6, 7, 8), source=None, output=None):
             )
             ax.set_title(LABELS[i])
             ax.set_xlabel("Measured MAC reduction (%)")
+            ax.set_xticks([25, 40, 55, 70, 85])
             ax.grid(alpha=0.2)
             if i in [2, 5]:
                 ax.set_ylim(-0.02, 1.03 if i == 5 else 0.6)
