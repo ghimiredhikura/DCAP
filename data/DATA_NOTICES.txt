@@ -1,0 +1,53 @@
+DCAP processed Nepal landslide dataset — Round 1 release, 10 November 2026
+
+This separate dataset contains 1,320 losslessly compressed image/mask pairs
+for 2017–2019. Raster values are unchanged from the study. Images contain
+14 stored channels; the code derives six reflectance-change channels and
+validity. Masks use 0 (provisional background), 1 (landslide), 255 (ignored).
+These are modified research products, not official provider products.
+
+The MIT software licence does not replace the following source-data terms.
+Retain this notice and the referenced terms in subsequent redistribution.
+
+1. BGS/NGDC inventory, accession 166966 (Jones et al.)
+   https://webservices.bgs.ac.uk/accessions/item/166966
+   https://webapps.bgs.ac.uk/services/ngdc/accessions/index.html#item166966
+   Open Government Licence: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+   Contains data supplied by UKRI.
+   Modifications: annual filtering, quality screening, reprojection and
+   rasterization to 10 m research masks.
+
+2. Burrows, Katy; Marc, Odin; Andermann, Christoff (2023).
+   Monsoon triggered landslides in Nepal timed with Sentinel-1 for
+   2015, 2017, 2018 and 2019. https://doi.org/10.5281/zenodo.7970874
+   Creative Commons Attribution 4.0 International:
+   https://creativecommons.org/licenses/by/4.0/
+   Modifications: 2017–2019 polygon selection, quality screening,
+   reprojection and rasterization. Original timing tables are not needed
+   for the released image/mask pairs.
+
+3. Sentinel-2 L2A imagery, accessed through Microsoft Planetary Computer.
+   Contains modified Copernicus Sentinel data (2017–2019).
+   https://sentinels.copernicus.eu/documents/247904/690755/Sentinel_Data_Legal_Notice
+   https://cds.climate.copernicus.eu/licences/ec-sentinel
+   Modifications: scene selection, 10 m reprojection/resampling, clipping,
+   invalid-pixel masking and reflectance-change derivation in the loader.
+   The imagery is provided without warranty under those source terms.
+
+4. Copernicus DEM GLO-30 (WorldDEM-30).
+   produced using Copernicus WorldDEM-30 © DLR e.V. 2010-2014 and
+   © Airbus Defence and Space GmbH 2014-2018 provided under COPERNICUS
+   by the European Union and ESA; all rights reserved.
+   The organisations in charge of the Copernicus programme by law or
+   by delegation do not incur any liability for any use of the
+   Copernicus WorldDEM-30.
+   See licenses/Copernicus-DEM-GLO30.pdf, especially Articles 4 and 6.
+   Modifications: bilinear resampling of GLO-30 elevation to the chip
+   grid and slope derivation. Resampling is not an independent 10 m
+   terrain observation. No WorldDEM-10/EEA-10 product is redistributed.
+   Subsequent users must retain the source attribution, liability notice
+   and obligations in Article 6. No provider endorses this research.
+
+Source eligibility and attribution were checked on 10 November 2026.
+The separate code repository documents downloading and preparing the
+source products, the frozen partition and the training-only normalization.

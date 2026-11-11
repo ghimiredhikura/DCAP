@@ -1,0 +1,132 @@
+{
+  "models": [
+    {
+      "group": "dense",
+      "seed": 42,
+      "asset": "dense_seed42.pt",
+      "asset_group": "main",
+      "sha256": "7249cc451a5506c31fb40bcbc28dc02d9ab38b2d4655269809bc5ae1c132ab85",
+      "bytes": 30501543,
+      "configuration": {
+        "architecture": "resunet",
+        "input_channels": 21,
+        "input_mode": "reflectance_change"
+      },
+      "parameters": 7598241,
+      "deterministic_algorithms": false
+    },
+    {
+      "group": "dense",
+      "seed": 123,
+      "asset": "dense_seed123.pt",
+      "asset_group": "main",
+      "sha256": "5cd68672e7a42d73b4872519bc2f22a909e77ce5a6e10bce70745391db4af5e6",
+      "bytes": 30501737,
+      "configuration": {
+        "architecture": "resunet",
+        "input_channels": 21,
+        "input_mode": "reflectance_change"
+      },
+      "parameters": 7598241,
+      "deterministic_algorithms": false
+    },
+    {
+      "group": "dense",
+      "seed": 2026,
+      "asset": "dense_seed2026.pt",
+      "asset_group": "main",
+      "sha256": "7b0e844d7e0a417d71dd6f273b1db0c4fc5c33b2af7e6e92239a169c33856b08",
+      "bytes": 30501931,
+      "configuration": {
+        "architecture": "resunet",
+        "input_channels": 21,
+        "input_mode": "reflectance_change"
+      },
+      "parameters": 7598241,
+      "deterministic_algorithms": false
+    },
+    {
+      "group": "dcap70",
+      "seed": 42,
+      "asset": "dcap70_seed42.pt",
+      "asset_group": "main",
+      "sha256": "c26458510fc5f097f95ea702234f11596066421fe72ac806a39bec1a04e4d75b",
+      "bytes": 3472147,
+      "configuration": {
+        "architecture": "resunet",
+        "input_mode": "reflectance_change",
+        "input_channels": 21
+      },
+      "parameters": 848330,
+      "deterministic_algorithms": false
+    },
+    {
+      "group": "dcap70",
+      "seed": 123,
+      "asset": "dcap70_seed123.pt",
+      "asset_group": "main",
+      "sha256": "8934058181baadcfbbc5e83e473f6b7dcc17d87baa9217259df2c416ffa5de30",
+      "bytes": 3599891,
+      "configuration": {
+        "architecture": "resunet",
+        "input_mode": "reflectance_change",
+        "input_channels": 21
+      },
+      "parameters": 879809,
+      "deterministic_algorithms": false
+    },
+    {
+      "group": "dcap70",
+      "seed": 2026,
+      "asset": "dcap70_seed2026.pt",
+      "asset_group": "main",
+      "sha256": "87943040a3db2e8812db8fa21df5bee7fa26dab2037eaba7d54945a8c11f019c",
+      "bytes": 3596051,
+      "configuration": {
+        "architecture": "resunet",
+        "input_mode": "reflectance_change",
+        "input_channels": 21
+      },
+      "parameters": 879025,
+      "deterministic_algorithms": false
+    }
+  ],
+  "ensembles": {
+    "dense": {
+      "assets": [
+        "dense_seed42.pt",
+        "dense_seed123.pt",
+        "dense_seed2026.pt"
+      ],
+      "configuration": {
+        "architecture": "resunet",
+        "input_channels": 21,
+        "input_mode": "reflectance_change"
+      },
+      "weights": [
+        0.3333333333333333,
+        0.3333333333333333,
+        0.3333333333333333
+      ],
+      "scientific_source": "resunet_dense"
+    },
+    "dcap70": {
+      "assets": [
+        "dcap70_seed42.pt",
+        "dcap70_seed123.pt",
+        "dcap70_seed2026.pt"
+      ],
+      "configuration": {
+        "architecture": "resunet",
+        "input_mode": "reflectance_change",
+        "input_channels": 21
+      },
+      "weights": [
+        0.3333333333333333,
+        0.3333333333333333,
+        0.3333333333333333
+      ],
+      "scientific_source": "E1_original_dcap_mac70_full"
+    }
+  }
+}

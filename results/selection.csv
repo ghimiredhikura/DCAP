@@ -1,0 +1,16 @@
+ensemble,method,budget,mac_reduction,validation_ap,joint_support,eligible
+E1_original_dcap_mac25_full,dcap,25,24.905825592386677,0.49482710148264164,0.8344,False
+E1_original_dcap_mac40_full,dcap,40,40.076723019930995,0.4949654441658092,0.5441,False
+E1_original_dcap_mac55_full,dcap,55,54.95121704021777,0.4920134031987893,0.8342,False
+E1_original_dcap_mac70_full,dcap,70,70.03165217242919,0.4948982279952506,1.0,True
+E1_original_dcap_mac85_full,dcap,85,84.97636994589094,0.4825955887581322,0.3161,False
+E1_original_taylor_mac25_full,taylor,25,25.417868917901487,0.5039033471015611,0.8346,False
+E1_original_taylor_mac40_full,taylor,40,40.19803598686986,0.4966011786298128,1.0,True
+E1_original_taylor_mac55_full,taylor,55,55.0457391957689,0.4941160182440466,0.9105,False
+E1_original_taylor_mac70_full,taylor,70,70.00336113248447,0.48735724063646185,0.5443,False
+E1_original_taylor_mac85_full,taylor,85,85.10647356701995,0.49524700377890285,0.9997,True
+E1_original_magnitude_mac25_full,magnitude,25,24.89637693187553,0.43962748336154506,0.0,False
+E1_original_magnitude_mac40_full,magnitude,40,39.9424076412503,0.4608949064422161,0.0,False
+E1_original_magnitude_mac55_full,magnitude,55,54.86891195487602,0.46454456089507656,0.0,False
+E1_original_magnitude_mac70_full,magnitude,70,69.6873998123971,0.3964093290547589,0.0001,False
+E1_original_magnitude_mac85_full,magnitude,85,84.96705896253734,0.3967624035645266,0.001,False

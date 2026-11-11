@@ -1,0 +1,10 @@
+{
+  "data": {
+    "asset": "DATA_NOTICES.txt",
+    "sha256": "a5cc9edf968bc70c5aea5e24dc58b7b2276f71025d5170be3e542191fa890a26"
+  },
+  "models": {
+    "asset": "MODEL_NOTICES.txt",
+    "sha256": "8b7c3f8363e61e16ce9dbe5b8b4dd139ff3c45e25b08993bea81bec176184452"
+  }
+}

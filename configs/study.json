@@ -1,0 +1,124 @@
+{
+  "gate_epochs": 18,
+  "minimum_channels": 8,
+  "mac_tolerance": 0.012,
+  "recovery_loss": {
+    "kd": 0.25,
+    "brier_excess": 0.5,
+    "dice_excess": 0.5,
+    "boundary_kd": 0.15,
+    "small_excess": 0.2
+  },
+  "recovery": {
+    "max_epochs": 90,
+    "min_epochs": 25,
+    "dual_patience": 20,
+    "ap_delta": 0.001,
+    "loss_delta": 0.001,
+    "warmup_epochs": 5,
+    "encoder_lr": 1e-05,
+    "decoder_lr": 0.0001,
+    "weight_decay": 0.0001,
+    "ema_decay": 0.999
+  },
+  "joint_constraints": {
+    "dice": [
+      "ge",
+      -0.02
+    ],
+    "small_object_recall": [
+      "ge",
+      -0.05
+    ],
+    "boundary_f1": [
+      "ge",
+      -0.03
+    ],
+    "balanced_brier_score": [
+      "le",
+      0.01
+    ]
+  },
+  "bootstrap_replicates": 10000,
+  "bootstrap_seed": 2026,
+  "primary_block_km": 20,
+  "required_joint_support": 0.95,
+  "version": "1.1.0",
+  "seeds": [
+    42,
+    123,
+    2026
+  ],
+  "targets": [
+    0.25,
+    0.4,
+    0.55,
+    0.7,
+    0.85
+  ],
+  "split": {
+    "train": 990,
+    "validation": 132,
+    "test": 198,
+    "footprint_buffer_m": 2560,
+    "centroid_margin_m": 5120
+  },
+  "dense": {
+    "max_epochs": 100,
+    "min_epochs": 30,
+    "dual_patience": 15,
+    "ap_delta": 0.001,
+    "loss_delta": 0.001,
+    "warmup_epochs": 8,
+    "encoder_lr": 3e-05,
+    "decoder_lr": 0.0003,
+    "weight_decay": 0.0001,
+    "ema_decay": 0.999
+  },
+  "compact_widths": {
+    "25": [
+      28,
+      354
+    ],
+    "40": [
+      25,
+      314
+    ],
+    "55": [
+      21,
+      406
+    ],
+    "70": [
+      17,
+      340
+    ],
+    "85": [
+      12,
+      216
+    ]
+  },
+  "supervised_finetuning": {
+    "max_epochs": 90,
+    "min_epochs": 25,
+    "dual_patience": 20,
+    "ap_delta": 0.001,
+    "loss_delta": 0.001,
+    "warmup_epochs": 5,
+    "encoder_lr": 1e-05,
+    "decoder_lr": 0.0001,
+    "weight_decay": 0.0001,
+    "ema_decay": 0.999
+  },
+  "checkpoint_score": "validation AP/(1+supervised validation loss)",
+  "evaluation": {
+    "chip_size": 256,
+    "histogram_bins": 1001,
+    "small_object_pixels": 41,
+    "object_coverage": 0.5,
+    "boundary_tolerance_pixels": 2
+  },
+  "test_scope": "Retrospective held-out spatial locations in the sampled 2017-2019 years; not independent-event validation",
+  "selected_ensemble": "dcap70",
+  "software_license": "MIT",
+  "validation_ap_tolerance": 0.01
+}

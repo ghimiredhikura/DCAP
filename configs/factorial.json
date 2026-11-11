@@ -1,0 +1,121 @@
+{
+  "cells": [
+    {
+      "cell": "cell01",
+      "architecture": "resunet",
+      "input_mode": "raw_bitemporal_no_terrain",
+      "loss": "bce_dice",
+      "optimization": "standard"
+    },
+    {
+      "cell": "cell02",
+      "architecture": "resunet",
+      "input_mode": "post_only_no_terrain",
+      "loss": "bce_dice",
+      "optimization": "enhanced"
+    },
+    {
+      "cell": "cell03",
+      "architecture": "resunet",
+      "input_mode": "post_only_no_terrain",
+      "loss": "balanced_focal_tversky",
+      "optimization": "standard"
+    },
+    {
+      "cell": "cell04",
+      "architecture": "resunet",
+      "input_mode": "reflectance_change_no_terrain",
+      "loss": "balanced_focal_tversky",
+      "optimization": "enhanced"
+    },
+    {
+      "cell": "cell05",
+      "architecture": "resunet",
+      "input_mode": "post_only",
+      "loss": "bce_dice",
+      "optimization": "standard"
+    },
+    {
+      "cell": "cell06",
+      "architecture": "resunet",
+      "input_mode": "reflectance_change",
+      "loss": "bce_dice",
+      "optimization": "enhanced"
+    },
+    {
+      "cell": "cell07",
+      "architecture": "resunet",
+      "input_mode": "raw_bitemporal",
+      "loss": "balanced_focal_tversky",
+      "optimization": "standard"
+    },
+    {
+      "cell": "cell08",
+      "architecture": "resunet",
+      "input_mode": "raw_bitemporal",
+      "loss": "balanced_focal_tversky",
+      "optimization": "enhanced"
+    },
+    {
+      "cell": "cell09",
+      "architecture": "resnet34_deeplabv3plus",
+      "input_mode": "post_only_no_terrain",
+      "loss": "bce_dice",
+      "optimization": "standard"
+    },
+    {
+      "cell": "cell10",
+      "architecture": "resnet34_deeplabv3plus",
+      "input_mode": "raw_bitemporal_no_terrain",
+      "loss": "bce_dice",
+      "optimization": "enhanced"
+    },
+    {
+      "cell": "cell11",
+      "architecture": "resnet34_deeplabv3plus",
+      "input_mode": "reflectance_change_no_terrain",
+      "loss": "balanced_focal_tversky",
+      "optimization": "standard"
+    },
+    {
+      "cell": "cell12",
+      "architecture": "resnet34_deeplabv3plus",
+      "input_mode": "post_only_no_terrain",
+      "loss": "balanced_focal_tversky",
+      "optimization": "enhanced"
+    },
+    {
+      "cell": "cell13",
+      "architecture": "resnet34_deeplabv3plus",
+      "input_mode": "reflectance_change",
+      "loss": "bce_dice",
+      "optimization": "standard"
+    },
+    {
+      "cell": "cell14",
+      "architecture": "resnet34_deeplabv3plus",
+      "input_mode": "reflectance_change",
+      "loss": "bce_dice",
+      "optimization": "enhanced"
+    },
+    {
+      "cell": "cell15",
+      "architecture": "resnet34_deeplabv3plus",
+      "input_mode": "post_only",
+      "loss": "balanced_focal_tversky",
+      "optimization": "standard"
+    },
+    {
+      "cell": "cell16",
+      "architecture": "resnet34_deeplabv3plus",
+      "input_mode": "raw_bitemporal",
+      "loss": "balanced_focal_tversky",
+      "optimization": "enhanced"
+    }
+  ],
+  "seeds": [
+    42,
+    123,
+    2026
+  ]
+}

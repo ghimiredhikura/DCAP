@@ -1,0 +1,22 @@
+{
+  "bgs": {
+    "url": "https://webservices.bgs.ac.uk/accessions/item/166966",
+    "verified": true,
+    "sha256": "c863bba85f1e1207e970d23abbfc5fcfff98bcdb2b56390fe5456307a8274ab5",
+    "terms": "This resource has been made available under\u00a0the Open Government Licence (OGL). The following statement should be used to acknowledge the source of the information: \"Contains data supplied by UKRI.\""
+  },
+  "zenodo": {
+    "url": "https://zenodo.org/api/records/7970874",
+    "verified": true,
+    "sha256": "9be943939e081aa6453e0329284c96e85e501af5d4c6efb83a7b91300f33688c",
+    "terms": {
+      "id": "cc-by-4.0"
+    }
+  },
+  "dem_license": {
+    "url": "https://docs.sentinel-hub.com/api/latest/static/files/data/dem/resources/license/License-COPDEM-30.pdf",
+    "verified": true,
+    "sha256": "9cd37d37ea654bbcaf0a2e059e6a3a5b5f76072824d8dd860ccf274ada8951bd",
+    "terms": "Articles 4 and 6 permit distribution/modification subject to notices and downstream obligations."
+  }
+}
