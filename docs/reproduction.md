@@ -17,7 +17,7 @@ Complete [environment setup](setup.md), then run commands from the repository ro
 ```bash
 python -m dcap verify
 OPENBLAS_NUM_THREADS=2 python -m dcap replay --grid
-python -m dcap plot --figures 6 7 8
+python -m dcap plot --figures 6 7 8 10
 ```
 
 ### Inspect
@@ -39,6 +39,8 @@ OPENBLAS_NUM_THREADS=2 python -m pytest -q
 ```
 
 See [validation](validation.md) for the checks performed and their limits.
+
+For the verified target-device comparison, see [deployment results](benchmark.md). `plot --figures 10` also rebuilds `table13.csv` and `figure10.csv` from recorded timing summaries.
 
 ## 2. Evaluate released models
 
@@ -159,3 +161,11 @@ Start with [`cli.py`](../src/dcap/cli.py), then [`experiment.py`](../src/dcap/ex
 | `benchmark.py` | Timing with the same model loader and ensemble forward function |
 
 Keep the editable checkout. Use `DCAP_ROOT` to identify it when invoking the package elsewhere.
+
+
+## Published result tables
+
+- [Complete pruning operating points](../results/operating_points.csv): all five targets for DCAP, Group Taylor and Group Magnitude under both recovery formulations, plus the SIRFP adaptation under task-aware recovery; validation/test endpoints, computation and joint support (70 rows). `mac_reduction` is a fraction; `target_percent` is a percentage. These are ensemble results, not individual model scores.
+- [Deployment comparison](benchmark.md): Table 13 and Figure 10 from the verified RTX 4080/Orin timing summaries. Run `python -m dcap plot --figures 10` to reproduce the tables and plot without a GPU.
+
+Only dense/DCAP checkpoints are distributed. The shared campaign regenerates the main ResUNet comparison; SIRFP/SegFormer implementations and regional retraining are outside this compact package.

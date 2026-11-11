@@ -6,7 +6,7 @@ Start with **[Setup](setup.md)**, then choose a task:
 |---|---|
 | [Reproduction](reproduction.md) | Replay statistics, evaluate released checkpoints or retrain the main comparison |
 | [Data](data.md) | Install processed chips, rebuild source data and retain required attribution |
-| [Ubuntu benchmark](benchmark.md) | Measure GPU inference with the released ensembles |
+| [Deployment and benchmark](benchmark.md) | Replay target-device results or measure GPU inference with the released ensembles |
 | [Validation](validation.md) | Check what was tested and the limits of those checks |
 | [Release](release.md) | Find assets, checksums and source-packaging instructions |
 

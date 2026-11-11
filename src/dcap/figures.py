@@ -1,4 +1,4 @@
-"""Render manuscript Figures 6–8 from small, explicit result tables."""
+"""Render manuscript Figures 6–8 and 10 from explicit result tables."""
 
 from pathlib import Path
 
@@ -10,6 +10,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 from matplotlib.patches import Rectangle
+from matplotlib.ticker import MultipleLocator, FormatStrFormatter
 
 from .paths import ROOT, read
 
@@ -41,6 +42,92 @@ COLORS = {
     "magnitude": "#c97135",
     "compact": "#9ba18a",
 }
+
+
+
+
+def deployment_results(source):
+    """Rebuild Table 13 and Figure 10 from the recorded timing summaries."""
+    records = read(Path(source) / "deployment.json")["measurements"]
+    by = {(r["device"], r["model"], r["backend"], r["batch"]): r for r in records}
+    table, figure = [], []
+    for device in ["rtx4080", "orin"]:
+        for backend in ["amp", "trt_graph", "fp32_graph"]:
+            models = ["dense", "dcap70"]
+            if backend == "fp32_graph":
+                models += ["taylor70", "sirfp70", "segformer_b2"]
+            for model in models:
+                single, batch = [by[device, model, backend, b] for b in [1, 4]]
+                memory = "trt_context_MiB" if backend == "trt_graph" else "allocated_MiB"
+                table.append(dict(device=device, model=model, backend=backend,
+                                  latency_ms=single["median_ms"],
+                                  throughput_chips_s=4000/batch["median_ms"],
+                                  memory_MiB=single[memory],
+                                  reserved_MiB=single["reserved_MiB"] if backend == "fp32_graph" else ""))
+        for metric, batch in [("latency", 1), ("throughput", 4)]:
+            def block_values(model):
+                values = np.asarray(by[device, model, "fp32_graph", batch]["block_medians_ms"])
+                return values if batch == 1 else 4000/values
+            denominator = float(np.median(block_values("dense")))
+            for model in ["dense", "compact70", "magnitude70", "taylor70", "dcap70"]:
+                values = block_values(model)/denominator
+                figure.append(dict(device=device, model=model, metric=metric,
+                                   normalized_median=float(np.median(values)),
+                                   normalized_minimum=float(min(values)),
+                                   normalized_maximum=float(max(values)),
+                                   dense_block_median=denominator))
+    return pd.DataFrame(table), pd.DataFrame(figure)
+
+
+def deployment_figure(data):
+    """Plot device-relative latency and throughput with timing-block ranges."""
+    models = ["dense", "compact70", "magnitude70", "taylor70", "dcap70"]
+    names = ["Dense reference", "Direct compact", "Group Magnitude", "Group Taylor", "DCAP"]
+    colors = ["#414141", "#65704f", "#926b50", "#75628d", "#A61C2B"]
+    markers = ["P", "s", "D", "^", "o"]
+    plt.rcParams.update({"font.family": "DejaVu Sans", "font.size": 10,
+                         "pdf.fonttype": 42, "axes.spines.top": False,
+                         "axes.spines.right": False, "text.color": "#222222",
+                         "axes.labelcolor": "#222222", "xtick.color": "#333333",
+                         "ytick.color": "#222222"})
+    fig, axes = plt.subplots(2, 2, figsize=(11.6, 6.2), sharey=True)
+    fig.subplots_adjust(left=.19, right=.98, top=.91, bottom=.13, wspace=.28, hspace=.48)
+    throughput_max = data.loc[data.metric == "throughput", "normalized_maximum"].max()
+    limits = {"latency": (.30, 1.12),
+              "throughput": (.80, float(np.ceil((throughput_max + .25) * 5) / 5))}
+    for i, (device, title) in enumerate([("rtx4080", "RTX 4080"), ("orin", "Jetson AGX Orin")]):
+        for j, metric in enumerate(["latency", "throughput"]):
+            ax = axes[i, j]
+            ax.axhspan(3.58, 4.42, color="#A61C2B", alpha=.055, zorder=0)
+            selected = data[(data.device == device) & (data.metric == metric)].set_index("model")
+            for y, model in enumerate(models):
+                row = selected.loc[model]
+                center, lo, hi = row[["normalized_median", "normalized_minimum", "normalized_maximum"]]
+                if not limits[metric][0] < lo <= center <= hi < limits[metric][1]:
+                    raise ValueError(f"Timing range outside display limits: {device}/{model}/{metric}")
+                ax.errorbar(center, y, xerr=[[center-lo], [hi-center]], fmt=markers[y],
+                            color=colors[y], ms=5.5, capsize=3, lw=1.4, zorder=3)
+                ax.annotate(f"{center:.2f}×", (hi, y), xytext=(7, 0), textcoords="offset points",
+                            va="center", fontsize=9, color="#A61C2B" if model == "dcap70" else "#222222")
+            ax.axvline(1, color="#666666", ls="--", lw=1, zorder=1)
+            ax.set_yticks(range(5), names)
+            ax.set_ylim(4.55, -.55)
+            ax.set_title(f"({chr(97+2*i+j)}) {title}: {metric}", loc="left", pad=9)
+            ax.set_xlim(*limits[metric])
+            ax.xaxis.set_major_locator(MultipleLocator(.2))
+            ax.xaxis.set_major_formatter(FormatStrFormatter("%.1f"))
+            ax.grid(axis="x", color="#dddddd", alpha=.65, lw=.6)
+            ax.tick_params(axis="both", length=3, width=.6)
+            for spine in ax.spines.values():
+                spine.set_color("#888888")
+                spine.set_linewidth(.7)
+            for tick in ax.get_yticklabels():
+                if tick.get_text() == "DCAP":
+                    tick.set_color("#A61C2B")
+            label = ("Latency relative to dense (×)  ← lower is better" if j == 0 else
+                     "Throughput relative to dense (×)  higher is better →")
+            ax.set_xlabel(label, fontsize=9, labelpad=7)
+    return fig
 
 
 def plot(numbers=(6, 7, 8), source=None, output=None):
@@ -271,4 +358,10 @@ def plot(numbers=(6, 7, 8), source=None, output=None):
             bar.ax.tick_params(labelsize=6.75, length=2, pad=2)
             bar.outline.set_visible(False)
             save(fig, 8)
+    if 10 in numbers:
+        table, data = deployment_results(source)
+        for name, frame in [("table13.csv", table), ("figure10.csv", data)]:
+            frame.to_csv(output / name, index=False)
+            created.append(str(output / name))
+        save(deployment_figure(data), 10)
     return dict(files=created)

@@ -8,7 +8,8 @@
   "figures": {
     "6": "Compression trade-offs",
     "7": "Paired preservation intervals",
-    "8": "Grid/margin sensitivity"
+    "8": "Grid/margin sensitivity",
+    "10": "RTX 4080 / Jetson AGX Orin deployment comparison"
   },
   "source_hashes": {
     "revision/analysis/ensemble_20261108_v1/summary.json": "a2a7c453fb5f28bbc8e545cbf188bbcc744fd989abfdec258028abcf43e08dd4",
@@ -19,5 +20,6 @@
     "revision/analysis/grid_sensitivity_20261108_v1/results.json": "e17a2a7a0256de6d2585a258f21135785b592066176d81c48bd7a2da795b66dc"
   },
   "checkpoint_scope": "Two complete three-member ensembles. Group Taylor, Group Magnitude and direct compact checkpoints can be regenerated using the shared training code; auxiliary comparators are outside this compact release.",
-  "target_device_measurements": "Pending RTX 4080 / Jetson AGX Orin measurements; local benchmark is a reproducibility example only."
+  "target_device_measurements": "Verified on 11 November 2026: 104 complete jobs and 1,608 prediction checks. Main contains Table 13/Figure 10 evidence; v1.1.0 assets remain unchanged.",
+  "main_update_date": "2026-11-11"
 }

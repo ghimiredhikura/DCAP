@@ -2,7 +2,7 @@
 
 [Repository](https://github.com/ghimiredhikura/DCAP) · [v1.1.0 prerelease](https://github.com/ghimiredhikura/DCAP/releases/tag/v1.1.0)
 
-RTX 4080/Jetson Orin measurements are pending. No software DOI is assigned.
+The `main` branch includes verified RTX 4080/Jetson AGX Orin results and Figure 10 replay. The v1.1.0 tag and its source archive predate this update; its data and checkpoint assets remain valid and unchanged. Clone `main` for the current documentation and deployment evidence. No software DOI is assigned.
 
 ## Where files live
 

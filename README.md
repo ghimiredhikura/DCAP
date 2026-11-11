@@ -1,10 +1,10 @@
 # DCAP for landslide segmentation
 
-**Detail–Context Adaptive Pruning (DCAP)** combines dependency-shared channel gates, physical structured pruning and task-aware recovery. This repository provides code, processed Nepal landslide data, representative checkpoints and evidence for manuscript Figures 6–8.
+**Detail–Context Adaptive Pruning (DCAP)** combines dependency-shared channel gates, physical structured pruning and task-aware recovery. This repository provides code, processed Nepal landslide data, representative checkpoints and evidence for manuscript Figures 6–8 and 10.
 
 [**Data and models: v1.1.0 prerelease**](https://github.com/ghimiredhikura/DCAP/releases/tag/v1.1.0) · [Setup](docs/setup.md) · [Reproduction](docs/reproduction.md) · [All guides](docs/README.md)
 
-RTX 4080 and Jetson Orin deployment measurements are pending.
+Verified RTX 4080 and Jetson AGX Orin deployment results are included on `main`; the tagged v1.1.0 data/model assets remain unchanged.
 
 ## Main results
 
@@ -25,6 +25,17 @@ Validation selects DCAP at 70.03% MAC reduction and Group Taylor at 85.11%. Thei
 
 **Figure 6.** Compression trade-offs across five targets. Dotted lines show the dense reference, or the 0.95 cutoff for joint support. [PDF](results/figures/figure6.pdf) · [Plot data](results/figure6.csv)
 
+## Deployment results
+
+Complete three-model ensembles, **FP32 CUDA Graphs**, with a common 70% pruning target:
+
+| Device | Batch-one latency, dense → DCAP (ms) | Batch-four throughput, dense → DCAP (chips/s) | Peak allocation, dense → DCAP (MiB) |
+|---|---:|---:|---:|
+| RTX 4080 | 7.168 → 4.724 | 124.5 → 209.0 | 95.0 → 15.7 |
+| Jetson AGX Orin | 38.383 → 25.915 | 28.4 → 43.9 | 95.4 → 15.7 |
+
+TensorRT gives DCAP latencies of **0.967 / 5.914 ms** on RTX 4080 / Orin. Gains depend on the backend: Orin eager-AMP latency is 3.5% higher than dense, and other pruned models can be faster. [Protocol and comparison](docs/benchmark.md) · [Table 13](results/table13.csv) · [Figure 10](results/figures/figure10.pdf)
+
 ## Quick start
 
 ### 1. Clone and set up
@@ -44,7 +55,7 @@ No model or raster downloads are needed. Outputs go to `generated/`.
 
 ```bash
 python -m dcap verify
-python -m dcap plot --figures 6 7 8
+python -m dcap plot --figures 6 7 8 10
 OPENBLAS_NUM_THREADS=2 python -m dcap replay --grid
 ```
 
@@ -68,7 +79,7 @@ Next: [train the main comparison](docs/reproduction.md) or [benchmark an Ubuntu 
 |---|---|
 | [`src/dcap/`](src/dcap/) | Shared preparation, training, pruning, inference, analysis and plotting code |
 | [`configs/`](configs/) / [`metadata/`](metadata/) | Protocol, fixed splits, source geometries, thresholds and checksums |
-| [`results/`](results/) | Figures 6–8, plot tables and compact spatial evidence |
+| [`results/`](results/) | Figures 6–8 and 10, deployment tables and compact spatial evidence |
 | [`data/`](data/README.md) | Small inference fixture and dataset notices; full rasters are release assets |
 | [`docs/`](docs/README.md) | Setup, reproduction, data, benchmark and validation guides |
 

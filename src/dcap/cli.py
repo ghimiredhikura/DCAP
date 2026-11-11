@@ -73,11 +73,11 @@ def build_parser():
     command.add_argument("--imagery-root")
     command = commands.add_parser(
         "plot",
-        help="Draw Figures 6–8 from result tables",
-        description="Draw Figures 6–8 from result tables",
+        help="Draw Figures 6–8 and 10 from result tables",
+        description="Draw Figures 6–8 and 10 from result tables",
     )
     command.add_argument(
-        "--figures", type=int, nargs="+", default=[6, 7, 8], choices=[6, 7, 8]
+        "--figures", type=int, nargs="+", default=[6, 7, 8], choices=[6, 7, 8, 10]
     )
     command.add_argument(
         "--source", help="Folder containing the input assets or result tables"

@@ -1,0 +1,819 @@
+{
+  "date": "2026-11-11",
+  "scope": "Measured jobs supporting manuscript Table 13 and Figure 10; complete three-member ensembles.",
+  "source_archives_sha256": {
+    "rtx4080_RETURN.zip": "c0f87a42bc0559814d1b44e037761005a56c37c604b58ed8a1b28f1189e8d3cf",
+    "orin_RETURN.zip": "41c228882e4af6a2c0831ba48e966d00c5ded5cd27aa64306c3186e3c5ed0f14"
+  },
+  "verification": {
+    "complete_jobs": 104,
+    "prediction_parity_checks": 1608,
+    "included_measurement_summaries": 44
+  },
+  "environment": {
+    "rtx4080": {
+      "device": "RTX 4080 16 GB",
+      "os": "Windows 11 Pro",
+      "torch": "2.13.0+cu130",
+      "cuda": "13.0",
+      "tensorrt": "10.14.1.48.post1",
+      "driver": "610.88",
+      "cpu_threads": 8,
+      "gpu_clocks": "dynamic",
+      "display_processes": "active"
+    },
+    "orin": {
+      "device": "Jetson AGX Orin 64 GB",
+      "os": "Jetson Linux 35.4.1",
+      "torch": "2.1.0a0+41361538.nv23.06",
+      "cuda": "11.4",
+      "tensorrt": "8.5.2.2",
+      "cpu_threads": 8,
+      "power_mode": "MAXN",
+      "requested_gpu_cpu_emc_MHz": [
+        1122,
+        2201.6,
+        3199
+      ],
+      "overcurrent_increments": 0
+    }
+  },
+  "protocol": {
+    "input_shape": [
+      21,
+      256,
+      256
+    ],
+    "latency_batch": 1,
+    "throughput_batch": 4,
+    "timed_work": "GPU-resident input; three model forwards, sigmoid and FP32 probability averaging. Loading, preprocessing, transfers and graph capture/engine build excluded.",
+    "fp32": "TF32 disabled; 3 blocks, each with 30 warmups then >=100 synchronized calls and >=2 seconds.",
+    "amp": "30 warmups, 100 synchronized calls.",
+    "tensorrt": "FP16/FP32 engines with CUDA Graphs; 30 warmups, >=100 synchronized calls and >=30 seconds; 2 GiB workspace; builder optimization 3 on RTX 4080, vendor default on Orin.",
+    "memory": "Batch-one PyTorch peak allocation (AMP), allocated/reserved peaks (FP32 graphs), or native TensorRT context memory. These are different scopes, not total device use.",
+    "table": "Pooled-sample medians; batch-four throughput = 4000 / median_ms.",
+    "figure": "Median and range of three block medians, normalized by dense block-median center; throughput is computed per block before normalization."
+  },
+  "measurements": [
+    {
+      "device": "rtx4080",
+      "model": "dense",
+      "backend": "amp",
+      "batch": 4,
+      "median_ms": 32.574600000000004,
+      "p95_ms": 33.61047,
+      "throughput": 122.79506118263922,
+      "allocated_MiB": 616.42919921875,
+      "reserved_MiB": 930.0,
+      "trt_context_MiB": 0.0,
+      "block_medians_ms": [
+        32.574600000000004
+      ],
+      "job_sha256": "45621194de217370eb85472192d2574fb7b39f5e514f4cf3882b1bdc23cb84ad"
+    },
+    {
+      "device": "rtx4080",
+      "model": "dense",
+      "backend": "fp32_graph",
+      "batch": 4,
+      "median_ms": 32.13485,
+      "p95_ms": 32.848485,
+      "throughput": 124.47545266276332,
+      "allocated_MiB": 112.41943359375,
+      "reserved_MiB": 960.0,
+      "trt_context_MiB": 0.0,
+      "block_medians_ms": [
+        32.1112,
+        32.12245,
+        32.189800000000005
+      ],
+      "job_sha256": "9cec24c2f7a4c1be2ac59850d77867265e8c6c455d1d12244881506fdbf97e7c"
+    },
+    {
+      "device": "rtx4080",
+      "model": "dense",
+      "backend": "trt_graph",
+      "batch": 4,
+      "median_ms": 3.418,
+      "p95_ms": 4.0342,
+      "throughput": 1170.2750146284377,
+      "allocated_MiB": 26.0009765625,
+      "reserved_MiB": 50.0,
+      "trt_context_MiB": 258.0,
+      "block_medians_ms": [
+        3.418
+      ],
+      "job_sha256": "76aa76e802b59f34da510db4088bc6eb6a127a63728778e73898c9ab241dc6fb"
+    },
+    {
+      "device": "rtx4080",
+      "model": "sirfp70",
+      "backend": "fp32_graph",
+      "batch": 4,
+      "median_ms": 19.0431,
+      "p95_ms": 19.44968,
+      "throughput": 210.04983432319318,
+      "allocated_MiB": 29.64892578125,
+      "reserved_MiB": 614.0,
+      "trt_context_MiB": 0.0,
+      "block_medians_ms": [
+        19.099899999999998,
+        18.9816,
+        19.02175
+      ],
+      "job_sha256": "2d33e68bde78865d281921393d837c869783954800575acfb7581eb45ff73d9c"
+    },
+    {
+      "device": "rtx4080",
+      "model": "magnitude70",
+      "backend": "fp32_graph",
+      "batch": 4,
+      "median_ms": 23.73505,
+      "p95_ms": 24.338415,
+      "throughput": 168.52713602878444,
+      "allocated_MiB": 34.4365234375,
+      "reserved_MiB": 1280.0,
+      "trt_context_MiB": 0.0,
+      "block_medians_ms": [
+        23.71485,
+        23.734,
+        23.747149999999998
+      ],
+      "job_sha256": "a7c782e69741ac2202a5204ed50e386ebd70f88cdcb35efd9769c310c50995fc"
+    },
+    {
+      "device": "rtx4080",
+      "model": "taylor70",
+      "backend": "fp32_graph",
+      "batch": 1,
+      "median_ms": 4.1065,
+      "p95_ms": 4.65284,
+      "throughput": 243.51637647631804,
+      "allocated_MiB": 29.865234375,
+      "reserved_MiB": 140.0,
+      "trt_context_MiB": 0.0,
+      "block_medians_ms": [
+        4.0972,
+        4.1041,
+        4.1315
+      ],
+      "job_sha256": "aac35f0f94a3f547c609a7697b5edf979bcaf9eacf086a36127a4323d1c25528"
+    },
+    {
+      "device": "rtx4080",
+      "model": "magnitude70",
+      "backend": "fp32_graph",
+      "batch": 1,
+      "median_ms": 5.39225,
+      "p95_ms": 5.952625,
+      "throughput": 185.4513422040892,
+      "allocated_MiB": 16.9365234375,
+      "reserved_MiB": 242.0,
+      "trt_context_MiB": 0.0,
+      "block_medians_ms": [
+        5.3871,
+        5.3896,
+        5.3965
+      ],
+      "job_sha256": "35c0b371aa72e2016e892fc1f931a6bc832b1fcd86ac893c56160d1c9ea9d512"
+    },
+    {
+      "device": "rtx4080",
+      "model": "dense",
+      "backend": "fp32_graph",
+      "batch": 1,
+      "median_ms": 7.1678,
+      "p95_ms": 7.7393,
+      "throughput": 139.5128212282709,
+      "allocated_MiB": 95.04443359375,
+      "reserved_MiB": 296.0,
+      "trt_context_MiB": 0.0,
+      "block_medians_ms": [
+        7.15165,
+        7.1644,
+        7.1825
+      ],
+      "job_sha256": "a39672f8e361fb2025aded1e8d2c7af72903d7383b6d62090453eb7390eec49d"
+    },
+    {
+      "device": "rtx4080",
+      "model": "dense",
+      "backend": "trt_graph",
+      "batch": 1,
+      "median_ms": 1.0732,
+      "p95_ms": 1.30165,
+      "throughput": 931.7927692881104,
+      "allocated_MiB": 6.2509765625,
+      "reserved_MiB": 24.0,
+      "trt_context_MiB": 73.5,
+      "block_medians_ms": [
+        1.0732
+      ],
+      "job_sha256": "2acfe79e137110e404fb1208e2f3860942476bab9e872be4b03cfd5b94bb3a1b"
+    },
+    {
+      "device": "rtx4080",
+      "model": "dcap70",
+      "backend": "fp32_graph",
+      "batch": 4,
+      "median_ms": 19.14165,
+      "p95_ms": 19.442525,
+      "throughput": 208.9684013656085,
+      "allocated_MiB": 33.1806640625,
+      "reserved_MiB": 1156.0,
+      "trt_context_MiB": 0.0,
+      "block_medians_ms": [
+        19.07705,
+        19.1673,
+        19.1639
+      ],
+      "job_sha256": "a63df4f19d2a8fa353286cf1823a41a7a73ae7c0e782f8977e73b410204fb957"
+    },
+    {
+      "device": "rtx4080",
+      "model": "dcap70",
+      "backend": "trt_graph",
+      "batch": 1,
+      "median_ms": 0.9674,
+      "p95_ms": 1.1943,
+      "throughput": 1033.6985734959685,
+      "allocated_MiB": 6.2509765625,
+      "reserved_MiB": 24.0,
+      "trt_context_MiB": 53.0625,
+      "block_medians_ms": [
+        0.9674
+      ],
+      "job_sha256": "93b02dd7cb680d38691adee7b99b8d0ad4e7c31d5fa8a9ae03b1f794cc2cd409"
+    },
+    {
+      "device": "rtx4080",
+      "model": "taylor70",
+      "backend": "fp32_graph",
+      "batch": 4,
+      "median_ms": 12.85815,
+      "p95_ms": 13.193565,
+      "throughput": 311.08674264960354,
+      "allocated_MiB": 47.21826171875,
+      "reserved_MiB": 580.0,
+      "trt_context_MiB": 0.0,
+      "block_medians_ms": [
+        12.80475,
+        12.84345,
+        12.9427
+      ],
+      "job_sha256": "052392e9e30f2fe2c8bd22ad258c8e1042716bb6d9b3932392368d631216f0df"
+    },
+    {
+      "device": "rtx4080",
+      "model": "compact70",
+      "backend": "fp32_graph",
+      "batch": 4,
+      "median_ms": 15.1303,
+      "p95_ms": 15.430575,
+      "throughput": 264.37017111359324,
+      "allocated_MiB": 54.10302734375,
+      "reserved_MiB": 496.0,
+      "trt_context_MiB": 0.0,
+      "block_medians_ms": [
+        15.046,
+        15.0257,
+        15.32425
+      ],
+      "job_sha256": "40e2b961e981277ffc9aed0cf05939f405c2649f22f0d14145c6354ec2130f85"
+    },
+    {
+      "device": "rtx4080",
+      "model": "segformer_b2",
+      "backend": "fp32_graph",
+      "batch": 1,
+      "median_ms": 17.5039,
+      "p95_ms": 17.68581,
+      "throughput": 57.130125286364745,
+      "allocated_MiB": 385.27001953125,
+      "reserved_MiB": 600.0,
+      "trt_context_MiB": 0.0,
+      "block_medians_ms": [
+        17.5045,
+        17.32445,
+        17.5364
+      ],
+      "job_sha256": "18d77bb8ab6aa4810efd6f8c8dacdd28f79b98177381abd00d52b7a3d899d1ea"
+    },
+    {
+      "device": "rtx4080",
+      "model": "dcap70",
+      "backend": "amp",
+      "batch": 1,
+      "median_ms": 28.1049,
+      "p95_ms": 28.828654999999998,
+      "throughput": 35.5809840988582,
+      "allocated_MiB": 108.9755859375,
+      "reserved_MiB": 158.0,
+      "trt_context_MiB": 0.0,
+      "block_medians_ms": [
+        28.1049
+      ],
+      "job_sha256": "b05afba0c45e09509f4dc679dbf472ecb039cea6405b597fb5271d598a58b653"
+    },
+    {
+      "device": "rtx4080",
+      "model": "dcap70",
+      "backend": "fp32_graph",
+      "batch": 1,
+      "median_ms": 4.7235,
+      "p95_ms": 5.03796,
+      "throughput": 211.7074203450831,
+      "allocated_MiB": 15.6806640625,
+      "reserved_MiB": 180.0,
+      "trt_context_MiB": 0.0,
+      "block_medians_ms": [
+        4.7189499999999995,
+        4.7158,
+        4.7265
+      ],
+      "job_sha256": "61d1c0e5aa51a2797413fd83ffc222d257a63cd8f34cd910d13be673de3da497"
+    },
+    {
+      "device": "rtx4080",
+      "model": "dcap70",
+      "backend": "trt_graph",
+      "batch": 4,
+      "median_ms": 2.4294,
+      "p95_ms": 2.89972,
+      "throughput": 1646.4970774676876,
+      "allocated_MiB": 26.0009765625,
+      "reserved_MiB": 50.0,
+      "trt_context_MiB": 212.25,
+      "block_medians_ms": [
+        2.4294
+      ],
+      "job_sha256": "ada84523855cc97b4bb0a2f51488f3e53598d4555d027f327f809e16417f9032"
+    },
+    {
+      "device": "rtx4080",
+      "model": "sirfp70",
+      "backend": "fp32_graph",
+      "batch": 1,
+      "median_ms": 4.5482499999999995,
+      "p95_ms": 5.106515000000001,
+      "throughput": 219.86478315835762,
+      "allocated_MiB": 12.14892578125,
+      "reserved_MiB": 186.0,
+      "trt_context_MiB": 0.0,
+      "block_medians_ms": [
+        4.54665,
+        4.5508,
+        4.54775
+      ],
+      "job_sha256": "7cb425d399af9781d1905d287964d4ea8cedcd3ae004258bea19e2217f82c98b"
+    },
+    {
+      "device": "rtx4080",
+      "model": "segformer_b2",
+      "backend": "fp32_graph",
+      "batch": 4,
+      "median_ms": 58.551,
+      "p95_ms": 59.67321,
+      "throughput": 68.31651039264914,
+      "allocated_MiB": 404.48876953125,
+      "reserved_MiB": 1096.0,
+      "trt_context_MiB": 0.0,
+      "block_medians_ms": [
+        58.53375,
+        58.5837,
+        58.550200000000004
+      ],
+      "job_sha256": "23250ff05f4cf1669fea777fcb64d1e0ff33ce79dd053803624a60a927326d73"
+    },
+    {
+      "device": "rtx4080",
+      "model": "dcap70",
+      "backend": "amp",
+      "batch": 4,
+      "median_ms": 30.456049999999998,
+      "p95_ms": 31.397565,
+      "throughput": 131.3367951523589,
+      "allocated_MiB": 400.9560546875,
+      "reserved_MiB": 1178.0,
+      "trt_context_MiB": 0.0,
+      "block_medians_ms": [
+        30.456049999999998
+      ],
+      "job_sha256": "7003694d566058ffcacb03a5cca5c7c13b7b4d4d902e73c5d0d10b727fc3310d"
+    },
+    {
+      "device": "rtx4080",
+      "model": "dense",
+      "backend": "amp",
+      "batch": 1,
+      "median_ms": 29.9961,
+      "p95_ms": 36.50206999999999,
+      "throughput": 33.337667230073244,
+      "allocated_MiB": 221.05419921875,
+      "reserved_MiB": 254.0,
+      "trt_context_MiB": 0.0,
+      "block_medians_ms": [
+        29.9961
+      ],
+      "job_sha256": "181d3d1196acab388493197dfc3dfc2dcec831e45a016ca57584c63b6c18ab18"
+    },
+    {
+      "device": "rtx4080",
+      "model": "compact70",
+      "backend": "fp32_graph",
+      "batch": 1,
+      "median_ms": 4.55935,
+      "p95_ms": 5.062015,
+      "throughput": 219.32950968888107,
+      "allocated_MiB": 35.9365234375,
+      "reserved_MiB": 156.0,
+      "trt_context_MiB": 0.0,
+      "block_medians_ms": [
+        4.5542,
+        4.5635,
+        4.5608
+      ],
+      "job_sha256": "7815b2d571c2ef7383a005a695c8499e3575feabd3267e120c63ee950013100d"
+    },
+    {
+      "device": "orin",
+      "model": "dense",
+      "backend": "amp",
+      "batch": 4,
+      "median_ms": 80.368089,
+      "p95_ms": 80.4042852,
+      "throughput": 49.77099803878627,
+      "allocated_MiB": 392.5400390625,
+      "reserved_MiB": 548.0,
+      "trt_context_MiB": 0.0,
+      "block_medians_ms": [
+        80.368089
+      ],
+      "job_sha256": "29ca61f2571ad33543c5e7ec7afb298a6c870757120f6c5a76caa175904fda8e"
+    },
+    {
+      "device": "orin",
+      "model": "dense",
+      "backend": "fp32_graph",
+      "batch": 4,
+      "median_ms": 140.9479045,
+      "p95_ms": 140.994425,
+      "throughput": 28.3792796649914,
+      "allocated_MiB": 112.41943359375,
+      "reserved_MiB": 482.0,
+      "trt_context_MiB": 0.0,
+      "block_medians_ms": [
+        140.95016049999998,
+        140.94324799999998,
+        140.9514085
+      ],
+      "job_sha256": "a2a16cbfa886aceee5209ba2cdd09d2a719f4a40a46ba72f87c44341b368b933"
+    },
+    {
+      "device": "orin",
+      "model": "dense",
+      "backend": "trt_graph",
+      "batch": 4,
+      "median_ms": 23.4427895,
+      "p95_ms": 23.4720076,
+      "throughput": 170.6281583938635,
+      "allocated_MiB": 26.0009765625,
+      "reserved_MiB": 52.0,
+      "trt_context_MiB": 294.00244140625,
+      "block_medians_ms": [
+        23.4427895
+      ],
+      "job_sha256": "7db387cc7b7d1d4a8ea47d57b72f2726a8946e6b314b89ff38fd6bddc3eaa393"
+    },
+    {
+      "device": "orin",
+      "model": "sirfp70",
+      "backend": "fp32_graph",
+      "batch": 4,
+      "median_ms": 74.725638,
+      "p95_ms": 74.76194365,
+      "throughput": 53.52915153431008,
+      "allocated_MiB": 29.64892578125,
+      "reserved_MiB": 440.0,
+      "trt_context_MiB": 0.0,
+      "block_medians_ms": [
+        74.72287,
+        74.724854,
+        74.729062
+      ],
+      "job_sha256": "cad5a919f2b3c828e293e2ebe304d9a257300b924237d98f0b59d2308e05cf57"
+    },
+    {
+      "device": "orin",
+      "model": "magnitude70",
+      "backend": "fp32_graph",
+      "batch": 4,
+      "median_ms": 92.09143499999999,
+      "p95_ms": 92.2411394,
+      "throughput": 43.43509252516263,
+      "allocated_MiB": 34.4365234375,
+      "reserved_MiB": 364.0,
+      "trt_context_MiB": 0.0,
+      "block_medians_ms": [
+        92.09167450000001,
+        92.09317899999999,
+        92.08896999999999
+      ],
+      "job_sha256": "f28120d32b9ba7f24daedfd24eacaaf4d293928abd4f8fde3dba35ebd6d32381"
+    },
+    {
+      "device": "orin",
+      "model": "taylor70",
+      "backend": "fp32_graph",
+      "batch": 1,
+      "median_ms": 24.8586195,
+      "p95_ms": 24.888839200000003,
+      "throughput": 40.227495336175046,
+      "allocated_MiB": 29.865234375,
+      "reserved_MiB": 126.0,
+      "trt_context_MiB": 0.0,
+      "block_medians_ms": [
+        24.860028,
+        24.859948,
+        24.8558035
+      ],
+      "job_sha256": "62cc6364faea92c0b0e0326a4d09a83a79e47544ee23d903ccb37c024a1f81e1"
+    },
+    {
+      "device": "orin",
+      "model": "magnitude70",
+      "backend": "fp32_graph",
+      "batch": 1,
+      "median_ms": 26.040702500000002,
+      "p95_ms": 26.066775,
+      "throughput": 38.401421774239765,
+      "allocated_MiB": 16.9365234375,
+      "reserved_MiB": 172.0,
+      "trt_context_MiB": 0.0,
+      "block_medians_ms": [
+        26.0437905,
+        26.040095,
+        26.037775
+      ],
+      "job_sha256": "6fe5245eb2109b95c6e1bb1fd305e7ea9b6dcec3876a0047362e191b7771f66c"
+    },
+    {
+      "device": "orin",
+      "model": "dense",
+      "backend": "fp32_graph",
+      "batch": 1,
+      "median_ms": 38.382978,
+      "p95_ms": 38.410624750000004,
+      "throughput": 26.05321556863045,
+      "allocated_MiB": 95.41943359375,
+      "reserved_MiB": 210.0,
+      "trt_context_MiB": 0.0,
+      "block_medians_ms": [
+        38.3849915,
+        38.37896,
+        38.384544000000005
+      ],
+      "job_sha256": "a94b39c61d812e542dc122d98d1f354a0a6435d61b16f3558db16b8b581da399"
+    },
+    {
+      "device": "orin",
+      "model": "dense",
+      "backend": "trt_graph",
+      "batch": 1,
+      "median_ms": 6.481453,
+      "p95_ms": 6.507534,
+      "throughput": 154.28639226420373,
+      "allocated_MiB": 6.2509765625,
+      "reserved_MiB": 26.0,
+      "trt_context_MiB": 75.00244140625,
+      "block_medians_ms": [
+        6.481453
+      ],
+      "job_sha256": "f67584a9bc8113ed2b21dbe331706aca4540da05b67b8c0608beefd73b106b1e"
+    },
+    {
+      "device": "orin",
+      "model": "dcap70",
+      "backend": "fp32_graph",
+      "batch": 4,
+      "median_ms": 91.04837900000001,
+      "p95_ms": 91.33782815,
+      "throughput": 43.93268769782271,
+      "allocated_MiB": 33.1806640625,
+      "reserved_MiB": 546.0,
+      "trt_context_MiB": 0.0,
+      "block_medians_ms": [
+        91.313344,
+        91.038763,
+        91.04468299999999
+      ],
+      "job_sha256": "f74ab6f48677e3521ffb4878f06bc188c7dd7c761813be7df6cb65fabfbe2b06"
+    },
+    {
+      "device": "orin",
+      "model": "dcap70",
+      "backend": "trt_graph",
+      "batch": 1,
+      "median_ms": 5.914212,
+      "p95_ms": 5.923716,
+      "throughput": 169.0842330305373,
+      "allocated_MiB": 6.2509765625,
+      "reserved_MiB": 26.0,
+      "trt_context_MiB": 53.06298828125,
+      "block_medians_ms": [
+        5.914212
+      ],
+      "job_sha256": "f657131f7491698df6695ad98f01e81ec348214cca2961deb9c75e6d080505a1"
+    },
+    {
+      "device": "orin",
+      "model": "taylor70",
+      "backend": "fp32_graph",
+      "batch": 4,
+      "median_ms": 79.0990045,
+      "p95_ms": 79.12825465,
+      "throughput": 50.56953656098162,
+      "allocated_MiB": 47.21826171875,
+      "reserved_MiB": 424.0,
+      "trt_context_MiB": 0.0,
+      "block_medians_ms": [
+        79.10327699999999,
+        79.0950205,
+        79.10073299999999
+      ],
+      "job_sha256": "41aa0e65d82a06e6ba4b1b2760ce5a8d2c2a7ba1dc9a42b607ccb86efdaf35a0"
+    },
+    {
+      "device": "orin",
+      "model": "compact70",
+      "backend": "fp32_graph",
+      "batch": 4,
+      "median_ms": 81.84361200000001,
+      "p95_ms": 82.1189488,
+      "throughput": 48.87369829181048,
+      "allocated_MiB": 54.10302734375,
+      "reserved_MiB": 266.0,
+      "trt_context_MiB": 0.0,
+      "block_medians_ms": [
+        81.856859,
+        81.844412,
+        81.834955
+      ],
+      "job_sha256": "581365b3554b68b4f9f6167f3dd5122634749d2159c17ac008c9decb8447e771"
+    },
+    {
+      "device": "orin",
+      "model": "segformer_b2",
+      "backend": "fp32_graph",
+      "batch": 1,
+      "median_ms": 79.81914499999999,
+      "p95_ms": 79.8726148,
+      "throughput": 12.52832262234831,
+      "allocated_MiB": 384.83251953125,
+      "reserved_MiB": 570.0,
+      "trt_context_MiB": 0.0,
+      "block_medians_ms": [
+        79.823801,
+        79.820841,
+        79.804537
+      ],
+      "job_sha256": "719004837962d1b3b38a498f6a6d885ce5631a845360ba46898793d6f5fc3c71"
+    },
+    {
+      "device": "orin",
+      "model": "dcap70",
+      "backend": "amp",
+      "batch": 1,
+      "median_ms": 27.759542500000002,
+      "p95_ms": 27.826207999999998,
+      "throughput": 36.023648444494356,
+      "allocated_MiB": 163.04443359375,
+      "reserved_MiB": 298.0,
+      "trt_context_MiB": 0.0,
+      "block_medians_ms": [
+        27.759542500000002
+      ],
+      "job_sha256": "eedb56bc132e2402207d1bf49f07c04d61c6e6840049dd905c78fd88cfc5997c"
+    },
+    {
+      "device": "orin",
+      "model": "dcap70",
+      "backend": "fp32_graph",
+      "batch": 1,
+      "median_ms": 25.915447999999998,
+      "p95_ms": 25.941400950000002,
+      "throughput": 38.58702346183636,
+      "allocated_MiB": 15.6806640625,
+      "reserved_MiB": 150.0,
+      "trt_context_MiB": 0.0,
+      "block_medians_ms": [
+        25.9158155,
+        25.9125675,
+        25.915992000000003
+      ],
+      "job_sha256": "4f21573c6ca7df80f7a1c27abd5e206e3c5417b1cf286c396fc1a4eacda7c25f"
+    },
+    {
+      "device": "orin",
+      "model": "dcap70",
+      "backend": "trt_graph",
+      "batch": 4,
+      "median_ms": 21.308041,
+      "p95_ms": 21.334018,
+      "throughput": 187.72255976042098,
+      "allocated_MiB": 26.0009765625,
+      "reserved_MiB": 52.0,
+      "trt_context_MiB": 212.2509765625,
+      "block_medians_ms": [
+        21.308041
+      ],
+      "job_sha256": "60f284607697aa196d005013dcbe0551c3da2491d6d5e07427a49e7f17bd54e7"
+    },
+    {
+      "device": "orin",
+      "model": "sirfp70",
+      "backend": "fp32_graph",
+      "batch": 1,
+      "median_ms": 21.352137499999998,
+      "p95_ms": 21.3701012,
+      "throughput": 46.83371863823938,
+      "allocated_MiB": 12.14892578125,
+      "reserved_MiB": 138.0,
+      "trt_context_MiB": 0.0,
+      "block_medians_ms": [
+        21.3523775,
+        21.35281,
+        21.350856999999998
+      ],
+      "job_sha256": "5c962343f5fa3f120357214781bfdfc1a9a485937b4e824c11645d8afddb70e6"
+    },
+    {
+      "device": "orin",
+      "model": "segformer_b2",
+      "backend": "fp32_graph",
+      "batch": 4,
+      "median_ms": 262.352873,
+      "p95_ms": 262.4790963,
+      "throughput": 15.246640733375923,
+      "allocated_MiB": 404.48876953125,
+      "reserved_MiB": 952.0,
+      "trt_context_MiB": 0.0,
+      "block_medians_ms": [
+        262.363468,
+        262.323448,
+        262.368118
+      ],
+      "job_sha256": "c892f323bf171c3a930250a957df1e12c3074c5fc7f26d88e2bcf2df6ba13e92"
+    },
+    {
+      "device": "orin",
+      "model": "dcap70",
+      "backend": "amp",
+      "batch": 4,
+      "median_ms": 72.6899395,
+      "p95_ms": 72.9850986,
+      "throughput": 55.02824775359732,
+      "allocated_MiB": 211.13134765625,
+      "reserved_MiB": 278.0,
+      "trt_context_MiB": 0.0,
+      "block_medians_ms": [
+        72.6899395
+      ],
+      "job_sha256": "982c59f117fa6ca8e035481b2d3968199c1db1888725669487da9820354e5ced"
+    },
+    {
+      "device": "orin",
+      "model": "dense",
+      "backend": "amp",
+      "batch": 1,
+      "median_ms": 26.818942,
+      "p95_ms": 26.914023,
+      "throughput": 37.28707866253635,
+      "allocated_MiB": 295.6650390625,
+      "reserved_MiB": 388.0,
+      "trt_context_MiB": 0.0,
+      "block_medians_ms": [
+        26.818942
+      ],
+      "job_sha256": "e6e117debdcb24511692527ecad641267b0e0364f24b5cec0f12a7855da0f263"
+    },
+    {
+      "device": "orin",
+      "model": "compact70",
+      "backend": "fp32_graph",
+      "batch": 1,
+      "median_ms": 24.1785135,
+      "p95_ms": 24.269229300000003,
+      "throughput": 41.35903557511921,
+      "allocated_MiB": 35.9365234375,
+      "reserved_MiB": 138.0,
+      "trt_context_MiB": 0.0,
+      "block_medians_ms": [
+        24.177824,
+        24.1801785,
+        24.178195000000002
+      ],
+      "job_sha256": "82f61cd1f2fc3928af552da3823be97d1b28da2f965575ada8823ffaa54c6c10"
+    }
+  ]
+}

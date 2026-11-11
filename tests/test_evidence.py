@@ -290,3 +290,14 @@ def test_gate_bank_preserves_pytorch_module_api():
     assert all(
         p.grad is not None and torch.isfinite(p.grad).all() for p in bank.parameters()
     )
+
+
+def test_target_device_tables_from_recorded_timings():
+    from dcap.figures import deployment_results
+
+    table, figure = deployment_results(ROOT / "results")
+    for actual, filename in [(table, "table13.csv"), (figure, "figure10.csv")]:
+        expected = pd.read_csv(ROOT / "results" / filename).fillna("")
+        pd.testing.assert_frame_equal(actual, expected, check_dtype=False, rtol=1e-13, atol=1e-13)
+    assert set(table.model) == {"dense", "dcap70", "taylor70", "sirfp70", "segformer_b2"}
+    assert len(table) == 18 and len(figure) == 20

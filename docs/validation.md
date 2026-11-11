@@ -1,6 +1,6 @@
 # Local release validation
 
-Checked on Ubuntu with one RTX 5090 selected for GPU inference. Exact package versions are in [tested_environment.json](tested_environment.json). This record concerns release correctness, not the pending RTX 4080/Jetson Orin manuscript measurements.
+Checked on Ubuntu with one RTX 5090 selected for GPU inference. Exact package versions are in [tested_environment.json](tested_environment.json). The table below records package correctness. Verified target-device measurements are described in the [benchmark guide](benchmark.md).
 
 ## Completed checks
 
@@ -17,7 +17,8 @@ Checked on Ubuntu with one RTX 5090 selected for GPU inference. Exact package ve
 | DCAP construction and recovery | Full 18-epoch gate learning, physical removal, training-only inheritance/BN selection and one recovery epoch completed; measured MAC reduction 70.0003% |
 | Ubuntu inference benchmark | All 12 model/mode/batch combinations passed CPU parity and changed-input checks; full timing protocol passed initially; all 12 functional configurations passed after cleanup |
 | Automated regression suite | Twelve checks passed in both the CUDA host environment and a fresh isolated CPU environment, including scientific replay, split/threshold provenance, checkpoint/statistics integrity and package exclusions |
-| Figures | Figures 6–8 regenerated as PDF/PNG; rendering inspected |
+| Figures | Figures 6–8 and 10 regenerated as PDF/PNG; rendering inspected |
+| Target-device evidence | Table 13/Figure 10 replay from 44 recorded job summaries; original suite passed 104 jobs and 1,608 prediction checks |
 | Fresh environment | Python 3.13 venv without system site packages; official CPU PyTorch 2.13.0, pinned dependencies and editable checkout installed; `pip check`, replay and plots passed |
 | Campaign collection | Complete collection and figure generation checked with synthetic completed-run fixtures; test fixtures are excluded from the release |
 | Source quality and distribution | Static checks passed; unused helpers/duplicate imports removed; manifest and portable-checkout verification passed |
@@ -27,6 +28,6 @@ Checked on Ubuntu with one RTX 5090 selected for GPU inference. Exact package ve
 - **Full retraining:** the 63-model campaign was not repeated as a packaging test. Training, inference and collection were checked separately; synthetic/smoke outputs are excluded from scientific evidence.
 - **Complete source reprocessing:** live downloading/rebuilding was checked on one chip. All packaged raster hashes and all 1,320 reconstructed masks were checked locally.
 - **Bitwise portability:** training trajectories and upstream source reprocessing can vary across machines or provider updates.
-- **Target-device performance:** RTX 4080 and Jetson Orin measurements remain pending.
+- **Target-device portability:** measured RTX 4080/Orin results apply to their recorded software and power/clock settings; they are not timing guarantees on other configurations.
 
 Use the supplied checkpoints, frozen rasters and compact statistics for direct replay of the reported values. See the [reproduction routes](reproduction.md).
