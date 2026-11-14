@@ -1,39 +1,12 @@
 # DCAP for landslide segmentation
 
+**Paper:** Detail–Context Adaptive Structured Pruning under Spatial Dependence for Multitemporal Landslide Segmentation
+
 **Detail–Context Adaptive Pruning (DCAP)** combines dependency-shared channel gates, physical structured pruning and task-aware recovery. This repository provides code, processed Nepal landslide data, representative checkpoints and evidence for manuscript Figures 6–8 and 10.
 
 [**Code and comparator models: v1.2.0**](https://github.com/ghimiredhikura/DCAP/releases/tag/v1.2.0) · [Setup](docs/setup.md) · [Reproduction](docs/reproduction.md) · [All guides](docs/README.md)
 
 Verified RTX 4080 and Jetson AGX Orin deployment results are included on `main`; the tagged v1.1.0 data/model assets remain unchanged.
-
-## Main results
-
-Retrospective test results for three-model ensembles on withheld locations from 2017–2019. All compressed models use a common 70% target. MAC reduction reports the measured value.
-
-| Model (MAC reduction target) | MAC reduction | AP ↑ | Dice ↑ | Small-scar recall ↑ | Boundary F1 ↑ | Balanced Brier ↓ | Joint support ↑ |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| Dense reference | 0.00% | 0.4333 | 0.4760 | 0.2895 | 0.5425 | 0.2310 | — |
-| DCAP (70%) | 70.03% | 0.4268 | 0.4791 | 0.3158 | 0.5445 | 0.2280 | 0.9484 |
-| Group Taylor (70%) | 70.00% | 0.4226 | 0.4502 | 0.2632 | 0.5214 | 0.2322 | 0.1742 |
-| Group Magnitude (70%) | 69.69% | 0.3683 | 0.4657 | 0.2895 | 0.5294 | 0.2587 | 0.0006 |
-| Direct compact (70%) | 69.82% | 0.4250 | 0.4525 | 0.2895 | 0.5167 | 0.2444 | 0.2109 |
-
-DCAP's test joint support of 0.9484 remains below the specified 0.95 cutoff; the comparison does not establish joint preservation or uniform superiority. Values come from [the compression grid](results/figure6.csv) and [dense results](results/representative.json). All budgets and validation-selected operating points remain in [the complete table](results/operating_points.csv) and [selection results](results/selection.csv).
-
-[![Figure 6: test performance across measured MAC reductions for DCAP, Group Taylor, Group Magnitude and direct compact models.](results/figures/figure6.png)](results/figures/figure6.pdf)
-
-**Figure 6.** Compression trade-offs across five targets. Dotted lines show the dense reference, or the 0.95 cutoff for joint support. [PDF](results/figures/figure6.pdf) · [Plot data](results/figure6.csv)
-
-## Deployment results
-
-Complete three-model ensembles, **FP32 CUDA Graphs**, with a common 70% pruning target:
-
-| Device | Batch-one latency, dense → DCAP (ms) | Batch-four throughput, dense → DCAP (chips/s) | Peak allocation, dense → DCAP (MiB) |
-|---|---:|---:|---:|
-| RTX 4080 | 7.168 → 4.724 | 124.5 → 209.0 | 95.0 → 15.7 |
-| Jetson AGX Orin | 38.383 → 25.915 | 28.4 → 43.9 | 95.4 → 15.7 |
-
-TensorRT gives DCAP latencies of **0.967 / 5.914 ms** on RTX 4080 / Orin. Gains depend on the backend: Orin eager-AMP latency is 3.5% higher than dense, and other pruned models can be faster. [Protocol and comparison](docs/benchmark.md) · [Table 13](results/table13.csv) · [Figure 10](results/figures/figure10.pdf)
 
 ## Quick start
 
@@ -73,6 +46,35 @@ python -m dcap evaluate --ensemble dcap70 --split test
 For SIRFP/SegFormer checkpoints and reproduction commands, follow the [comparator guide](docs/comparators.md).
 
 Next: [train the main comparison](docs/reproduction.md) or [benchmark an Ubuntu GPU](docs/benchmark.md). Benchmarking needs the model download only.
+
+## Main results
+
+Retrospective test results for three-model ensembles on withheld locations from 2017–2019. All compressed models use a common 70% target. MAC reduction reports the measured value.
+
+| Model (MAC reduction target) | MAC reduction | AP ↑ | Dice ↑ | Small-scar recall ↑ | Boundary F1 ↑ | Balanced Brier ↓ | Joint support ↑ |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Dense reference | 0.00% | 0.4333 | 0.4760 | 0.2895 | 0.5425 | 0.2310 | — |
+| DCAP (70%) | 70.03% | 0.4268 | 0.4791 | 0.3158 | 0.5445 | 0.2280 | 0.9484 |
+| Group Taylor (70%) | 70.00% | 0.4226 | 0.4502 | 0.2632 | 0.5214 | 0.2322 | 0.1742 |
+| Group Magnitude (70%) | 69.69% | 0.3683 | 0.4657 | 0.2895 | 0.5294 | 0.2587 | 0.0006 |
+| Direct compact (70%) | 69.82% | 0.4250 | 0.4525 | 0.2895 | 0.5167 | 0.2444 | 0.2109 |
+
+DCAP's test joint support of 0.9484 remains below the specified 0.95 cutoff; the comparison does not establish joint preservation or uniform superiority. Values come from [the compression grid](results/figure6.csv) and [dense results](results/representative.json). All budgets and validation-selected operating points remain in [the complete table](results/operating_points.csv) and [selection results](results/selection.csv).
+
+[![Figure 6: test performance across measured MAC reductions for DCAP, Group Taylor, Group Magnitude and direct compact models.](results/figures/figure6.png)](results/figures/figure6.pdf)
+
+**Figure 6.** Compression trade-offs across five targets. Dotted lines show the dense reference, or the 0.95 cutoff for joint support. [PDF](results/figures/figure6.pdf) · [Plot data](results/figure6.csv)
+
+## Deployment results
+
+Complete three-model ensembles, **FP32 CUDA Graphs**, with a common 70% pruning target:
+
+| Device | Batch-one latency, dense → DCAP (ms) | Batch-four throughput, dense → DCAP (chips/s) | Peak allocation, dense → DCAP (MiB) |
+|---|---:|---:|---:|
+| RTX 4080 | 7.168 → 4.724 | 124.5 → 209.0 | 95.0 → 15.7 |
+| Jetson AGX Orin | 38.383 → 25.915 | 28.4 → 43.9 | 95.4 → 15.7 |
+
+TensorRT gives DCAP latencies of **0.967 / 5.914 ms** on RTX 4080 / Orin. Gains depend on the backend: Orin eager-AMP latency is 3.5% higher than dense, and other pruned models can be faster. [Protocol and comparison](docs/benchmark.md) · [Table 13](results/table13.csv) · [Figure 10](results/figures/figure10.pdf)
 
 ## Repository guide
 
